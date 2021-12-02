@@ -1,7 +1,7 @@
 use aocf::Aoc;
 
 const YEAR: i32 = 2021;
-const DAY: u32 = 2;
+const DAY: u32 = 3;
 
 fn get_input(year: i32, day: u32) -> String {
     println!("Advent of Code {} - Day {}", year, day);

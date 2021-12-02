@@ -76,14 +76,14 @@ mod tests {
     }
 
     #[test]
-    fn test_part1_real() {
+    fn real_part1() {
         let data = get_input(YEAR, DAY);
         let count = part1(&data);
         assert_eq!(1228, count);
     }
 
     #[test]
-    fn test_part2_real() {
+    fn real_part2() {
         let data = get_input(YEAR, DAY);
         let count = part2(&data);
         assert_eq!(1257, count);
