@@ -88,29 +88,29 @@ mod tests {
     use std::fs::read_to_string;
     #[test]
     fn test_part1() {
-        let data = read_to_string("part1_test.txt").unwrap();
+        let data = read_to_string("test.txt").unwrap();
         let count = part1(&data);
         assert_eq!(150, count);
     }
 
     #[test]
     fn test_part2() {
-        let data = read_to_string("part1_test.txt").unwrap();
+        let data = read_to_string("test.txt").unwrap();
         let count = part2(&data);
         assert_eq!(900, count);
     }
 
-    // #[test]
-    // fn test_part1_real() {
-    //     let data = get_input(YEAR, DAY);
-    //     let count = part1(&data);
-    //     assert_eq!(1228, count);
-    // }
+    #[test]
+    fn test_part1_real() {
+        let data = get_input(YEAR, DAY);
+        let count = part1(&data);
+        assert_eq!(1813801, count);
+    }
 
-    // #[test]
-    // fn test_part2_real() {
-    //     let data = get_input(YEAR, DAY);
-    //     let count = part2(&data);
-    //     assert_eq!(1257, count);
-    // }
+    #[test]
+    fn test_part2_real() {
+        let data = get_input(YEAR, DAY);
+        let count = part2(&data);
+        assert_eq!(1960569556, count);
+    }
 }

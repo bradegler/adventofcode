@@ -63,14 +63,14 @@ mod tests {
     use std::fs::read_to_string;
     #[test]
     fn test_part1() {
-        let data = read_to_string("part1_test.txt").unwrap();
+        let data = read_to_string("test.txt").unwrap();
         let count = part1(&data);
         assert_eq!(7, count);
     }
 
     #[test]
     fn test_part2() {
-        let data = read_to_string("part2_test.txt").unwrap();
+        let data = read_to_string("test.txt").unwrap();
         let count = part2(&data);
         assert_eq!(5, count);
     }
