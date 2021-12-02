@@ -30,52 +30,31 @@ fn main() {
 
 fn part1(data: &String) -> i32 {
     println!("Part 1");
-    let values: Vec<i32> = data
+    let count = data
         .split("\n")
         .filter(|s| !s.is_empty())
         .map(|s| s.parse::<i32>().unwrap())
-        .collect();
-
-    let mut prev = values[0];
-    let mut count = 0;
-    for i in 1..values.len() {
-        let curr = values[i];
-        if curr > prev {
-            count += 1;
-        }
-        prev = curr;
-    }
+        .collect::<Vec<i32>>()[..]
+        .windows(2)
+        .fold(0, |acc, tpl| acc + if tpl[1] > tpl[0] { 1 } else { 0 });
     println!("Part 1 Result: {}", count);
     return count;
 }
 
 fn part2(data: &String) -> i32 {
     println!("Part 2");
-    let values: Vec<i32> = data
+    let count = data
         .split("\n")
         .filter(|s| !s.is_empty())
         .map(|s| s.parse::<i32>().unwrap())
-        .collect();
-    let mut windows: Vec<i32> = Vec::new();
-    for i in 0..values.len() {
-        if i >= values.len() - 2 {
-            break;
-        }
-        let window = values[i] + values[i + 1] + values[i + 2];
-        windows.push(window);
-    }
-    let mut prev = windows[0];
-    let mut count = 0;
-    for i in 1..windows.len() {
-        let curr = windows[i];
-        if curr > prev {
-            count += 1;
-        }
-        prev = curr;
-    }
+        .collect::<Vec<i32>>()[..]
+        .windows(3)
+        .map(|tpl| tpl.into_iter().fold(0, |a, b| a + b))
+        .collect::<Vec<i32>>()[..]
+        .windows(2)
+        .fold(0, |acc, tpl| acc + if tpl[1] > tpl[0] { 1 } else { 0 });
     println!("Part 2 Result: {}", count);
     return count;
-    //println!("{}", data);
 }
 
 #[cfg(test)]
