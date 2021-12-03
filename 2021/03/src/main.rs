@@ -38,8 +38,12 @@ fn part1(data: &String) -> i32 {
 
     let as_chars = report
         .iter()
-        .map(|s| s.chars().collect::<Vec<char>>())
-        .collect::<Vec<Vec<char>>>();
+        .map(|s| {
+            s.chars()
+                .map(|c| c.to_digit(RADIX).unwrap())
+                .collect::<Vec<u32>>()
+        })
+        .collect::<Vec<Vec<u32>>>();
 
     let input_len = as_chars[0].len();
     println!("Input Len: {}", input_len);
@@ -47,13 +51,12 @@ fn part1(data: &String) -> i32 {
     let mut col_1s = vec![0; input_len];
     for entry in &as_chars {
         for idx in 0..input_len {
-            if 0 == entry[idx].to_digit(RADIX).unwrap() {
+            if 0 == entry[idx] {
                 col_0s[idx] += 1;
             } else {
                 col_1s[idx] += 1;
             }
         }
-        println!("{}", entry[0]);
     }
     let mut gstr = "".to_owned();
     let mut estr = "".to_owned();
