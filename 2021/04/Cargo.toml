@@ -7,3 +7,4 @@ edition = "2021"
 
 [dependencies]
 aocf = "0.1.15"
+grid = "0.6.0"
