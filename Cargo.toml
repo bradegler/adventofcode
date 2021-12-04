@@ -4,6 +4,10 @@ version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[dependencies]
+grid = "0.6.0"
+aocf = "0.1.15"
+
 
 [lib]
 name = "aocshared"
@@ -25,7 +29,6 @@ path = "src/2021/03/main.rs"
 name = "aoc2021_04"
 path = "src/2021/04/main.rs"
 
-[dependencies]
-grid = "0.6.0"
-aocf = "0.1.15"
-
+[[bin]]
+name = "aoc2020_01"
+path = "src/2020/01/main.rs"

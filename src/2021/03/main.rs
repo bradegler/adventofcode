@@ -1,7 +1,7 @@
 use aocshared::get_input;
 
 const YEAR: i32 = 2021;
-const DAY: u32 = 3;
+const DAY: u32 = 03;
 
 fn main() {
     let i = get_input(YEAR, DAY);
