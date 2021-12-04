@@ -63,3 +63,24 @@ pub fn chunks<T>(slice: &[T], mut size: usize) -> impl Iterator<Item = &[T]> {
         current: 0,
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn test_chunks_even_split() {
+        let data = vec![1, 2, 3, 4, 5, 6, 7, 8, 9];
+        let mut chunks = chunks(&data, 3);
+        assert_eq!(chunks.next().unwrap(), &[1, 2, 3]);
+        assert_eq!(chunks.next().unwrap(), &[4, 5, 6]);
+        assert_eq!(chunks.next().unwrap(), &[7, 8, 9]);
+    }
+    #[test]
+    fn test_chunks_uneven_split() {
+        let data = vec![1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        let mut chunks = chunks(&data, 3);
+        assert_eq!(chunks.next().unwrap(), &[1, 2, 3]);
+        assert_eq!(chunks.next().unwrap(), &[4, 5, 6]);
+        assert_eq!(chunks.next().unwrap(), &[7, 8, 9, 10]);
+    }
+}

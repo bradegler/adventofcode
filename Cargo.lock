@@ -41,6 +41,7 @@ version = "0.1.0"
 dependencies = [
  "aocf",
  "grid",
+ "regex",
 ]
 
 [[package]]
