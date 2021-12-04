@@ -39,7 +39,7 @@ dependencies = [
 name = "aoc02"
 version = "0.1.0"
 dependencies = [
- "aocf",
+ "aocshared",
 ]
 
 [[package]]
@@ -58,6 +58,13 @@ dependencies = [
  "serde_json",
  "structopt",
  "tempfile",
+]
+
+[[package]]
+name = "aocshared"
+version = "0.1.0"
+dependencies = [
+ "aocf",
 ]
 
 [[package]]

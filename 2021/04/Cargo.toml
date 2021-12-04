@@ -6,5 +6,5 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-aocf = "0.1.15"
+aocshared = { path = "../../aocshared" }
 grid = "0.6.0"

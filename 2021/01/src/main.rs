@@ -1,26 +1,7 @@
-use aocf::Aoc;
+use aocshared::get_input;
 
 const YEAR: i32 = 2021;
 const DAY: u32 = 1;
-
-fn get_input(year: i32, day: u32) -> String {
-    println!("Advent of Code {} - Day {}", year, day);
-
-    let mut aoc = Aoc::new().year(Some(year)).day(Some(day)).init().unwrap();
-
-    // Get the brief
-    let brief = aoc.get_brief(false);
-    if let Ok(brief) = brief {
-        println!("{}", brief);
-    }
-
-    // Get input data (don't force)
-    if let Ok(i) = aoc.get_input(false) {
-        i
-    } else {
-        panic!("No input found");
-    }
-}
 
 fn main() {
     let i = get_input(YEAR, DAY);
