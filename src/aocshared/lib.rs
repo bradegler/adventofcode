@@ -1,4 +1,5 @@
 use aocf::Aoc;
+use std::fs::read_to_string;
 
 pub fn get_input(year: i32, day: u32) -> String {
     let mut aoc = Aoc::new().year(Some(year)).day(Some(day)).init().unwrap();
@@ -12,6 +13,15 @@ pub fn get_input(year: i32, day: u32) -> String {
         i
     } else {
         panic!("No input found");
+    }
+}
+
+pub fn get_test_input(year: i32, day: u32) -> String {
+    let file = format!("testdata/{}_{:0>2}.txt", year, day);
+    if let Ok(i) = read_to_string(&file) {
+        i
+    } else {
+        panic!("No input found {}", &file);
     }
 }
 

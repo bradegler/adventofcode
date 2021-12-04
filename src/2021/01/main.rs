@@ -41,32 +41,24 @@ fn part2(data: &String) -> i32 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::fs::read_to_string;
+    use aocshared::get_test_input;
     #[test]
-    fn test_part1() {
-        let data = read_to_string("test.txt").unwrap();
-        let count = part1(&data);
-        assert_eq!(7, count);
+    fn t2021_01_ep1() {
+        assert_eq!(7, part1(&get_test_input(YEAR, DAY)));
     }
 
     #[test]
-    fn test_part2() {
-        let data = read_to_string("test.txt").unwrap();
-        let count = part2(&data);
-        assert_eq!(5, count);
+    fn t2021_01_ep2() {
+        assert_eq!(5, part2(&get_test_input(YEAR, DAY)));
     }
 
     #[test]
-    fn real_part1() {
-        let data = get_input(YEAR, DAY);
-        let count = part1(&data);
-        assert_eq!(1228, count);
+    fn t2021_01_rp1() {
+        assert_eq!(1228, part1(&get_input(YEAR, DAY)));
     }
 
     #[test]
-    fn real_part2() {
-        let data = get_input(YEAR, DAY);
-        let count = part2(&data);
-        assert_eq!(1257, count);
+    fn t2021_01_rp2() {
+        assert_eq!(1257, part2(&get_input(YEAR, DAY)));
     }
 }
