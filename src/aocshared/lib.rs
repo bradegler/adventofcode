@@ -1,4 +1,5 @@
 use aocf::Aoc;
+use grid::Grid;
 use std::fs::read_to_string;
 
 pub fn get_input(year: i32, day: u32) -> String {
@@ -83,4 +84,19 @@ mod tests {
         assert_eq!(chunks.next().unwrap(), &[4, 5, 6]);
         assert_eq!(chunks.next().unwrap(), &[7, 8, 9, 10]);
     }
+}
+
+pub fn print_grid(area: &Grid<i32>, width: usize) {
+    let mut idx = 0;
+    area.iter().for_each(|v| {
+        if *v > 0 {
+            print!("{}", v);
+        } else {
+            print!(".");
+        }
+        idx += 1;
+        if idx % width == 0 {
+            print!("\n");
+        }
+    });
 }
