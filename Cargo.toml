@@ -8,6 +8,7 @@ edition = "2021"
 regex = "1.5.4"
 grid = "0.6.0"
 aocf = "0.1.15"
+itertools = "0.10"
 
 
 [lib]
@@ -61,3 +62,7 @@ path = "src/2021/06/main.rs"
 [[bin]]
 name = "aoc2021_07"
 path = "src/2021/07/main.rs"
+
+[[bin]]
+name = "aoc2021_08"
+path = "src/2021/08/main.rs"
