@@ -1,5 +1,4 @@
 use aocshared::get_input;
-use std::collections::VecDeque;
 
 const YEAR: i32 = 2020;
 const DAY: u32 = 03;
@@ -11,7 +10,6 @@ fn main() {
 }
 
 const TREE: char = '#';
-const EMPTY: char = '.';
 
 fn count_trees(landscape: &Vec<Vec<char>>, slope: (usize, usize)) -> i32 {
     let mut x = 0;
