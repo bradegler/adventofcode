@@ -96,15 +96,11 @@ fn part2(data: &String) -> i64 {
                 stack.pop();
             }
         }
-        let mut completions = stack
-            .iter()
-            .map(|c| closers[openers.iter().position(|x| *x == **c).unwrap()])
-            .collect::<Vec<char>>();
-        completions.reverse();
-        println!("{:?}", completions);
         line_scores.push(
-            completions
+            stack
                 .iter()
+                .map(|c| closers[openers.iter().position(|x| *x == **c).unwrap()])
+                .rev()
                 .fold(0, |acc, c| (acc * 5) + scores.get(&c).unwrap()),
         );
     }
