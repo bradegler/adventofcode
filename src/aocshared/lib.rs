@@ -25,15 +25,19 @@ pub fn get_test_input(year: i32, day: u32) -> String {
     }
 }
 
-pub fn get_lines_as_numbers(lines: String) -> Vec<u32> {
+pub fn get_lines_as_numbers(lines: &str) -> Vec<u32> {
     lines.lines().map(|s| s.parse::<u32>().unwrap()).collect()
 }
 
-pub fn get_lines_as_vec_chars(lines: String) -> Vec<Vec<char>> {
+pub fn get_lines_as_strs(lines: &str) -> Vec<&str> {
+    lines.lines().collect()
+}
+
+pub fn get_lines_as_vec_chars(lines: &str) -> Vec<Vec<char>> {
     lines.lines().map(|s| s.chars().collect()).collect()
 }
 
-pub fn get_lines_as_vec_u32(lines: String) -> Vec<Vec<u32>> {
+pub fn get_lines_as_vec_u32(lines: &str) -> Vec<Vec<u32>> {
     lines
         .lines()
         .map(|s| s.chars().map(|c| c.to_digit(10).unwrap()).collect())
@@ -79,6 +83,24 @@ pub fn chunks<T>(slice: &[T], mut size: usize) -> impl Iterator<Item = &[T]> {
     }
 }
 
+pub fn print_grid<T>(grid: &Vec<Vec<T>>)
+where
+    T: std::fmt::Display,
+{
+    for row in grid {
+        for v in row {
+            print!("{}", v);
+        }
+        println!();
+    }
+}
+
+struct Grid<T> {
+    pub grid: Vec<Vec<T>>,
+    pub width: usize,
+    pub height: usize,
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -103,7 +125,7 @@ mod tests {
     fn test_get_lines_as_numbers() {
         let input = "1\n2\n3\n4\n5\n6\n7\n8\n9\n10";
         let expected = vec![1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-        assert_eq!(get_lines_as_numbers(input.to_string()), expected);
+        assert_eq!(get_lines_as_numbers(input), expected);
     }
     #[test]
     fn test_get_lines_as_vec_char() {
@@ -118,7 +140,7 @@ mod tests {
             vec!['7', '8'],
             vec!['8', '9'],
         ];
-        assert_eq!(get_lines_as_vec_chars(input.to_string()), expected);
+        assert_eq!(get_lines_as_vec_chars(input), expected);
     }
     #[test]
     fn test_get_lines_as_vec_u32() {
@@ -133,6 +155,6 @@ mod tests {
             vec![7, 8],
             vec![8, 9],
         ];
-        assert_eq!(get_lines_as_vec_u32(input.to_string()), expected);
+        assert_eq!(get_lines_as_vec_u32(input), expected);
     }
 }

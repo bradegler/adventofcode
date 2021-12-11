@@ -1,36 +1,21 @@
-use aocshared::get_input;
+use aocshared::*;
 
 const YEAR: i32 = 2021;
 const DAY: u32 = 03;
 
 fn main() {
     let i = get_input(YEAR, DAY);
-    part1(&i);
-    part2(&i);
+    println!("Advent of Code {}-{:02}", YEAR, DAY);
+    println!("Part 1: [{}]", part1(&i));
+    println!("Part 2: [{}]", part2(&i));
 }
 
 fn part1(data: &String) -> i32 {
-    println!("Part 1");
-    const RADIX: u32 = 10;
-    let report = data
-        .split("\n")
-        .filter(|s| !s.is_empty())
-        .collect::<Vec<&str>>();
-
-    let as_chars = report
-        .iter()
-        .map(|s| {
-            s.chars()
-                .map(|c| c.to_digit(RADIX).unwrap())
-                .collect::<Vec<u32>>()
-        })
-        .collect::<Vec<Vec<u32>>>();
-
-    let input_len = as_chars[0].len();
-    println!("Input Len: {}", input_len);
+    let input = get_lines_as_vec_u32(data);
+    let input_len = input[0].len();
     let mut col_0s = vec![0; input_len];
     let mut col_1s = vec![0; input_len];
-    for entry in &as_chars {
+    for entry in &input {
         for idx in 0..input_len {
             if 0 == entry[idx] {
                 col_0s[idx] += 1;
@@ -50,34 +35,17 @@ fn part1(data: &String) -> i32 {
             estr.push_str("0");
         }
     }
-
     let gamma = isize::from_str_radix(&gstr[..], 2).unwrap();
     let epsilon = isize::from_str_radix(&estr[..], 2).unwrap();
-    println!("Gamma: {}", gamma);
-    println!("Epsilon: {}", epsilon);
-
-    let result = gamma * epsilon;
-    println!("Part 1 Result: {}", result);
-    return result.try_into().unwrap();
+    (gamma * epsilon) as i32
 }
 
 fn part2(data: &String) -> i32 {
-    println!("Part 2");
-    const RADIX: u32 = 10;
-    let report = data
-        .split("\n")
-        .filter(|s| !s.is_empty())
-        .collect::<Vec<&str>>();
-
-    let as_chars = report
-        .iter()
-        .map(|s| s.chars().collect::<Vec<char>>())
-        .collect::<Vec<Vec<char>>>();
-
-    let input_len = as_chars[0].len();
+    let input = get_lines_as_vec_chars(data);
+    let input_len = input[0].len();
     println!("Input Len: {}", input_len);
 
-    let mut ovalues = as_chars.clone();
+    let mut ovalues = input.clone();
     for idx in 0..input_len {
         if ovalues.len() == 1 {
             break;
@@ -85,7 +53,7 @@ fn part2(data: &String) -> i32 {
         let mut zero_count = 0;
         let mut one_count = 0;
         for entry in &ovalues {
-            if 0 == entry[idx].to_digit(RADIX).unwrap() {
+            if 0 == entry[idx].to_digit(10).unwrap() {
                 zero_count += 1;
             } else {
                 one_count += 1;
@@ -94,12 +62,12 @@ fn part2(data: &String) -> i32 {
         let test = if one_count >= zero_count { 1 } else { 0 };
         ovalues = ovalues
             .iter()
-            .filter(|entry| test == entry[idx].to_digit(RADIX).unwrap())
+            .filter(|entry| test == entry[idx].to_digit(10).unwrap())
             .cloned()
             .collect::<Vec<Vec<char>>>();
     }
 
-    let mut cvalues = as_chars.clone();
+    let mut cvalues = input.clone();
     for idx in 0..input_len {
         if cvalues.len() == 1 {
             break;
@@ -107,7 +75,7 @@ fn part2(data: &String) -> i32 {
         let mut zero_count = 0;
         let mut one_count = 0;
         for entry in &cvalues {
-            if 0 == entry[idx].to_digit(RADIX).unwrap() {
+            if 0 == entry[idx].to_digit(10).unwrap() {
                 zero_count += 1;
             } else {
                 one_count += 1;
@@ -116,7 +84,7 @@ fn part2(data: &String) -> i32 {
         let test = if one_count >= zero_count { 0 } else { 1 };
         cvalues = cvalues
             .iter()
-            .filter(|entry| test == entry[idx].to_digit(RADIX).unwrap())
+            .filter(|entry| test == entry[idx].to_digit(10).unwrap())
             .cloned()
             .collect::<Vec<Vec<char>>>();
     }
@@ -130,12 +98,7 @@ fn part2(data: &String) -> i32 {
 
     let oxygen = isize::from_str_radix(&ogr[..], 2).unwrap();
     let co2 = isize::from_str_radix(&csr[..], 2).unwrap();
-    println!("Oxygen: {}", oxygen);
-    println!("CO2: {}", co2);
-
-    let result = oxygen * co2;
-    println!("Part 2 Result: {}", result);
-    return result.try_into().unwrap();
+    (oxygen * co2) as i32
 }
 
 #[cfg(test)]

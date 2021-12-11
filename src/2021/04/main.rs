@@ -1,7 +1,6 @@
 #![feature(drain_filter)]
 
-use aocshared::chunks;
-use aocshared::get_input;
+use aocshared::*;
 use grid::Grid;
 
 const YEAR: i32 = 2021;
@@ -9,8 +8,9 @@ const DAY: u32 = 4;
 
 fn main() {
     let i = get_input(YEAR, DAY);
-    part1(&i);
-    part2(&i);
+    println!("Advent of Code {}-{:02}", YEAR, DAY);
+    println!("Part 1: [{}]", part1(&i));
+    println!("Part 2: [{}]", part2(&i));
 }
 
 struct Board {

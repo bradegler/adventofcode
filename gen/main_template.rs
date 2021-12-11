@@ -1,27 +1,21 @@
-use aocshared::get_input;
+use aocshared::*;
 
 const YEAR: i32 = %%YEAR%%;
 const DAY: u32 = %%DAY%%;
 
 fn main() {
     let i = get_input(YEAR, DAY);
-    part1(&i);
-    part2(&i);
+    println!("Advent of Code {}-{:02}", YEAR, DAY);
+    println!("Part 1: [{}]", part1(&i));
+    println!("Part 2: [{}]", part2(&i));
 }
 
 fn part1(data: &String) -> i32 {
-    println!("Part 1");
-
-    let result = 0;
-    println!("Part 1 Result: {}", result);
-    return result;
+    0
 }
 
 fn part2(data: &String) -> i32 {
-    println!("Part 2");
-    let result = 0;
-    println!("Part 2 Result: {}", result);
-    return result;
+    0
 }
 
 #[cfg(test)]

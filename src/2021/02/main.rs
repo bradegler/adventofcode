@@ -1,65 +1,42 @@
-use aocshared::get_input;
+use aocshared::*;
 
 const YEAR: i32 = 2021;
 const DAY: u32 = 02;
 
 fn main() {
     let i = get_input(YEAR, DAY);
-    part1(&i);
-    part2(&i);
+    println!("Advent of Code {}-{:02}", YEAR, DAY);
+    println!("Part 1: [{}]", part1(&i));
+    println!("Part 2: [{}]", part2(&i));
 }
 
 fn part1(data: &String) -> i32 {
-    println!("Part 1");
-    let mut hor = 0;
-    let mut depth = 0;
-    let commands = data
-        .split("\n")
-        .filter(|s| !s.is_empty())
-        .collect::<Vec<&str>>();
-
-    for cmd in commands {
+    let (hor, depth) = data.lines().fold((0, 0), |(hor, depth), cmd| {
         let parts = cmd.split(" ").collect::<Vec<&str>>();
-        let dir = parts[0];
-        let amt = parts[1];
-        match dir {
-            "forward" => hor += amt.parse::<i32>().unwrap(),
-            "down" => depth += amt.parse::<i32>().unwrap(),
-            "up" => depth -= amt.parse::<i32>().unwrap(),
+        match parts[0] {
+            "forward" => (hor + parts[1].parse::<i32>().unwrap(), depth),
+            "down" => (hor, depth + parts[1].parse::<i32>().unwrap()),
+            "up" => (hor, depth - parts[1].parse::<i32>().unwrap()),
             _ => panic!("Unknown direction"),
         }
-    }
-
-    println!("Part 1 Result: {}", hor * depth);
-    return hor * depth;
+    });
+    hor * depth
 }
 
 fn part2(data: &String) -> i32 {
-    println!("Part 2");
-    let mut hor = 0;
-    let mut depth = 0;
-    let mut aim = 0;
-    let commands = data
-        .split("\n")
-        .filter(|s| !s.is_empty())
-        .collect::<Vec<&str>>();
-
-    for cmd in commands {
+    let (hor, depth, _) = data.lines().fold((0, 0, 0), |(hor, depth, aim), cmd| {
         let parts = cmd.split(" ").collect::<Vec<&str>>();
-        let dir = parts[0];
-        let amt = parts[1];
-        match dir {
-            "forward" => {
-                hor += amt.parse::<i32>().unwrap();
-                depth += amt.parse::<i32>().unwrap() * aim;
-            }
-            "down" => aim += amt.parse::<i32>().unwrap(),
-            "up" => aim -= amt.parse::<i32>().unwrap(),
+        match parts[0] {
+            "forward" => (
+                hor + parts[1].parse::<i32>().unwrap(),
+                depth + (parts[1].parse::<i32>().unwrap() * aim),
+                aim,
+            ),
+            "down" => (hor, depth, aim + parts[1].parse::<i32>().unwrap()),
+            "up" => (hor, depth, aim - parts[1].parse::<i32>().unwrap()),
             _ => panic!("Unknown direction"),
         }
-    }
-
-    println!("Part 2 Result: {}", hor * depth);
+    });
     return hor * depth;
 }
 

@@ -1,41 +1,28 @@
-use aocshared::get_input;
+use aocshared::*;
 
 const YEAR: i32 = 2021;
 const DAY: u32 = 01;
 
 fn main() {
     let i = get_input(YEAR, DAY);
-    part1(&i);
-    part2(&i);
+    println!("Advent of Code {}-{:02}", YEAR, DAY);
+    println!("Part 1: [{}]", part1(&i));
+    println!("Part 2: [{}]", part2(&i));
 }
 
 fn part1(data: &String) -> i32 {
-    println!("Part 1");
-    let count = data
-        .split("\n")
-        .filter(|s| !s.is_empty())
-        .map(|s| s.parse::<i32>().unwrap())
-        .collect::<Vec<i32>>()[..]
+    get_lines_as_numbers(data)[..]
         .windows(2)
-        .fold(0, |acc, tpl| acc + if tpl[1] > tpl[0] { 1 } else { 0 });
-    println!("Part 1 Result: {}", count);
-    return count;
+        .fold(0, |acc, tpl| acc + if tpl[1] > tpl[0] { 1 } else { 0 })
 }
 
 fn part2(data: &String) -> i32 {
-    println!("Part 2");
-    let count = data
-        .split("\n")
-        .filter(|s| !s.is_empty())
-        .map(|s| s.parse::<i32>().unwrap())
-        .collect::<Vec<i32>>()[..]
+    get_lines_as_numbers(data)[..]
         .windows(3)
         .map(|tpl| tpl.into_iter().fold(0, |a, b| a + b))
-        .collect::<Vec<i32>>()[..]
+        .collect::<Vec<u32>>()[..]
         .windows(2)
-        .fold(0, |acc, tpl| acc + if tpl[1] > tpl[0] { 1 } else { 0 });
-    println!("Part 2 Result: {}", count);
-    return count;
+        .fold(0, |acc, tpl| acc + if tpl[1] > tpl[0] { 1 } else { 0 })
 }
 
 #[cfg(test)]

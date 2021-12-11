@@ -58,15 +58,6 @@ fn increment_adj(
     flashes
 }
 
-fn print_grid(grid: &Vec<Vec<u32>>) {
-    for row in grid {
-        for v in row {
-            print!("{}", v);
-        }
-        println!();
-    }
-}
-
 fn part1(data: &String) -> i32 {
     println!("Part 1");
 
