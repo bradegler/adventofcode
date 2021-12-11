@@ -135,7 +135,7 @@ mod tests {
 
     #[test]
     fn t2021_11_ep2() {
-        assert_eq!(0, part2(&get_test_input(YEAR, DAY)));
+        assert_eq!(195, part2(&get_test_input(YEAR, DAY)));
     }
 
     #[test]

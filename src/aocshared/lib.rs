@@ -1,5 +1,4 @@
 use aocf::Aoc;
-use grid::Grid;
 use std::fs::read_to_string;
 
 pub fn get_input(year: i32, day: u32) -> String {
@@ -24,6 +23,21 @@ pub fn get_test_input(year: i32, day: u32) -> String {
     } else {
         panic!("No input found {}", &file);
     }
+}
+
+pub fn get_lines_as_numbers(lines: String) -> Vec<u32> {
+    lines.lines().map(|s| s.parse::<u32>().unwrap()).collect()
+}
+
+pub fn get_lines_as_vec_chars(lines: String) -> Vec<Vec<char>> {
+    lines.lines().map(|s| s.chars().collect()).collect()
+}
+
+pub fn get_lines_as_vec_u32(lines: String) -> Vec<Vec<u32>> {
+    lines
+        .lines()
+        .map(|s| s.chars().map(|c| c.to_digit(10).unwrap()).collect())
+        .collect()
 }
 
 // Splits a slice into equal sized chunks.
@@ -84,19 +98,41 @@ mod tests {
         assert_eq!(chunks.next().unwrap(), &[4, 5, 6]);
         assert_eq!(chunks.next().unwrap(), &[7, 8, 9, 10]);
     }
-}
 
-pub fn print_grid(area: &Grid<i32>, width: usize) {
-    let mut idx = 0;
-    area.iter().for_each(|v| {
-        if *v > 0 {
-            print!("{}", v);
-        } else {
-            print!(".");
-        }
-        idx += 1;
-        if idx % width == 0 {
-            print!("\n");
-        }
-    });
+    #[test]
+    fn test_get_lines_as_numbers() {
+        let input = "1\n2\n3\n4\n5\n6\n7\n8\n9\n10";
+        let expected = vec![1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        assert_eq!(get_lines_as_numbers(input.to_string()), expected);
+    }
+    #[test]
+    fn test_get_lines_as_vec_char() {
+        let input = "12\n23\n34\n45\n56\n67\n78\n89";
+        let expected = vec![
+            vec!['1', '2'],
+            vec!['2', '3'],
+            vec!['3', '4'],
+            vec!['4', '5'],
+            vec!['5', '6'],
+            vec!['6', '7'],
+            vec!['7', '8'],
+            vec!['8', '9'],
+        ];
+        assert_eq!(get_lines_as_vec_chars(input.to_string()), expected);
+    }
+    #[test]
+    fn test_get_lines_as_vec_u32() {
+        let input = "12\n23\n34\n45\n56\n67\n78\n89";
+        let expected = vec![
+            vec![1, 2],
+            vec![2, 3],
+            vec![3, 4],
+            vec![4, 5],
+            vec![5, 6],
+            vec![6, 7],
+            vec![7, 8],
+            vec![8, 9],
+        ];
+        assert_eq!(get_lines_as_vec_u32(input.to_string()), expected);
+    }
 }
