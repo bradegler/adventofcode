@@ -95,6 +95,26 @@ where
     }
 }
 
+pub fn transpose(grid: &Vec<Vec<u32>>) -> Vec<Vec<u32>> {
+    let mut transposed = vec![vec![0; grid[0].len()]; grid.len()];
+    for (i, row) in grid.iter().enumerate() {
+        for (j, v) in row.iter().enumerate() {
+            transposed[j][i] = *v;
+        }
+    }
+    transposed
+}
+
+pub fn transpose_bool(grid: &Vec<Vec<bool>>) -> Vec<Vec<bool>> {
+    let mut transposed = vec![vec![false; grid[0].len()]; grid.len()];
+    for (i, row) in grid.iter().enumerate() {
+        for (j, v) in row.iter().enumerate() {
+            transposed[j][i] = *v;
+        }
+    }
+    transposed
+}
+
 struct Grid<T> {
     pub grid: Vec<Vec<T>>,
     pub width: usize,
@@ -156,5 +176,12 @@ mod tests {
             vec![8, 9],
         ];
         assert_eq!(get_lines_as_vec_u32(input), expected);
+    }
+    #[test]
+    fn test_transpose() {
+        let input = vec![vec![1, 2, 3], vec![4, 5, 6], vec![7, 8, 9]];
+        let output = transpose(&input);
+        let expected = vec![vec![1, 4, 7], vec![2, 5, 8], vec![3, 6, 9]];
+        assert_eq!(output, expected);
     }
 }

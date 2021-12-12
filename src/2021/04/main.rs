@@ -1,7 +1,5 @@
 #![feature(drain_filter)]
-
 use aocshared::*;
-use grid::Grid;
 
 const YEAR: i32 = 2021;
 const DAY: u32 = 4;
@@ -14,26 +12,19 @@ fn main() {
 }
 
 struct Board {
-    grid: Vec<Vec<i32>>,
-    state: Grid<bool>,
+    grid: Vec<Vec<u32>>,
+    state: Vec<Vec<bool>>,
 }
 
 impl Board {
     fn is_winner(&self) -> bool {
-        for row in 0..self.state.rows() {
-            if self.state.iter_row(row).all(|&x| x) {
-                return true;
-            }
-        }
-        for col in 0..self.state.cols() {
-            if self.state.iter_col(col).all(|&x| x) {
-                return true;
-            }
-        }
-        false
+        self.state.iter().any(|row| row.iter().all(|&b| b))
+            || transpose_bool(&self.state)
+                .iter()
+                .any(|row| row.iter().all(|&b| b))
     }
 
-    fn call(&mut self, val: i32) {
+    fn call(&mut self, val: u32) {
         for y in 0..5 {
             for x in 0..5 {
                 if self.grid[y][x] == val {
@@ -43,7 +34,7 @@ impl Board {
         }
     }
 
-    fn score(&self) -> i32 {
+    fn score(&self) -> u32 {
         let mut score = 0;
         for y in 0..5 {
             for x in 0..5 {
@@ -56,34 +47,30 @@ impl Board {
     }
 }
 
-fn part1(data: &String) -> i32 {
-    println!("Part 1");
-    let input = data.split("\n").collect::<Vec<&str>>();
+fn part1(data: &String) -> u32 {
+    let input = get_lines_as_strs(data);
     let call_order = input[0]
         .split(",")
-        .map(|s| s.parse::<i32>().unwrap())
+        .map(|s| s.parse::<u32>().unwrap())
         .collect::<Vec<_>>();
-    println!("Call order: {:?}", call_order);
     let mut boards = chunks(&input[1..], 6)
         .map(|f| {
             f.iter()
                 .filter(|s| !s.is_empty())
-                .map(|s| s.split_whitespace())
-                .map(|s| s.collect::<Vec<&str>>())
                 .map(|s| {
-                    s.iter()
-                        .map(|v| v.parse::<i32>().unwrap())
+                    s.split_whitespace()
+                        .map(|s| s.parse::<u32>().unwrap())
                         .collect::<Vec<_>>()
                 })
                 .collect::<Vec<_>>()
         })
         .map(|f| Board {
             grid: f,
-            state: Grid::new(5, 5),
+            state: vec![vec![false; 5]; 5],
         })
         .collect::<Vec<_>>();
 
-    let mut winner_call = -1;
+    let mut winner_call = 0;
     let mut winner: Option<&Board> = None;
     for call in call_order {
         boards.iter_mut().for_each(|b| b.call(call));
@@ -93,22 +80,15 @@ fn part1(data: &String) -> i32 {
             break;
         }
     }
-    println!("Winner call: {}", winner_call);
-    println!("Board: {:?}", winner.unwrap().state);
     let score = winner.unwrap().score();
-    println!("Score: {}", score);
-
-    let result = score * winner_call;
-    println!("Part 1 Result: {}", result);
-    return result;
+    score * winner_call
 }
 
-fn part2(data: &String) -> i32 {
-    println!("Part 2");
-    let input = data.split("\n").collect::<Vec<&str>>();
+fn part2(data: &String) -> u32 {
+    let input = get_lines_as_strs(data);
     let call_order = input[0]
         .split(",")
-        .map(|s| s.parse::<i32>().unwrap())
+        .map(|s| s.parse::<u32>().unwrap())
         .collect::<Vec<_>>();
     println!("Call order: {:?}", call_order);
     let boards = chunks(&input[1..], 6)
@@ -119,18 +99,18 @@ fn part2(data: &String) -> i32 {
                 .map(|s| s.collect::<Vec<&str>>())
                 .map(|s| {
                     s.iter()
-                        .map(|v| v.parse::<i32>().unwrap())
+                        .map(|v| v.parse::<u32>().unwrap())
                         .collect::<Vec<_>>()
                 })
                 .collect::<Vec<_>>()
         })
         .map(|f| Board {
             grid: f,
-            state: Grid::new(5, 5),
+            state: vec![vec![false; 5]; 5],
         })
         .collect::<Vec<_>>();
 
-    let mut winner_call = -1;
+    let mut winner_call = 0;
     let mut winner: Option<&mut Board> = None;
     let mut remaining = boards;
     for call in call_order {
