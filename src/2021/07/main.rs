@@ -1,63 +1,48 @@
-use aocshared::get_input;
+use aocshared::*;
 
 const YEAR: i32 = 2021;
 const DAY: u32 = 07;
 
 fn main() {
     let i = get_input(YEAR, DAY);
-    part1(&i);
-    part2(&i);
+    println!("Advent of Code {}-{:02}", YEAR, DAY);
+    println!("Part 1: [{}]", part1(&i));
+    println!("Part 2: [{}]", part2(&i));
 }
 
 fn part1(data: &String) -> i32 {
-    println!("Part 1");
-    let start = data
-        .split(",")
-        .map(|x| x.trim().parse::<i32>().unwrap())
-        .collect::<Vec<i32>>();
-
+    let start = get_numbers_from_line(data);
     let max = start.iter().max().unwrap();
-    let mut fuel_costs = vec![0i32; *max as usize + 1];
-    for idx in 0..=*max {
-        fuel_costs[idx as usize] = start.iter().map(|x| (x - idx).abs()).sum::<i32>();
-    }
-    let mut min = i32::max_value();
-    for idx in 0..fuel_costs.len() {
-        let fc = fuel_costs[idx];
-        if fc < min {
-            min = fc;
-        }
-    }
-    let result = min;
-    println!("Part 1 Result: {}", result);
-    return result.try_into().unwrap();
+    let result = (0..=*max)
+        .fold(vec![0i32; *max as usize + 1], |mut acc, idx| {
+            acc[idx as usize] = start.iter().map(|x| (x - idx).abs()).sum::<i32>();
+            acc
+        })
+        .iter()
+        .fold(
+            i32::max_value(),
+            |min, fc| if fc < &min { *fc } else { min },
+        );
+    result
 }
 
 fn part2(data: &String) -> i32 {
-    println!("Part 2");
-    let start = data
-        .split(",")
-        .map(|x| x.trim().parse::<i32>().unwrap())
-        .collect::<Vec<i32>>();
-
+    let start = get_numbers_from_line(data);
     let max = start.iter().max().unwrap();
-    let mut fuel_costs = vec![0i32; *max as usize + 1];
-    for idx in 0..=*max {
-        fuel_costs[idx as usize] = start.iter().map(|x| fuel((x - idx).abs())).sum::<i32>();
-    }
-    let mut min = i32::max_value();
-    for idx in 0..fuel_costs.len() {
-        let fc = fuel_costs[idx];
-        if fc < min {
-            min = fc;
-        }
-    }
-    let result = min;
-    println!("Part 2 Result: {}", result);
-    return result;
+    let result = (0..=*max)
+        .fold(vec![0i32; *max as usize + 1], |mut acc, idx| {
+            acc[idx as usize] = start.iter().map(|x| gauss((x - idx).abs())).sum::<i32>();
+            acc
+        })
+        .iter()
+        .fold(
+            i32::max_value(),
+            |min, fc| if fc < &min { *fc } else { min },
+        );
+    result
 }
 
-fn fuel(distance: i32) -> i32 {
+fn gauss(distance: i32) -> i32 {
     (distance * (distance + 1)) / 2
 }
 
