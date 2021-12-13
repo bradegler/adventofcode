@@ -3,12 +3,6 @@ use std::fs::read_to_string;
 
 pub fn get_input(year: i32, day: u32) -> String {
     let mut aoc = Aoc::new().year(Some(year)).day(Some(day)).init().unwrap();
-    println!(
-        "Advent of Code {} - Day {}: {}",
-        year,
-        day,
-        "title" //aoc.title.unwrap()
-    );
     if let Ok(i) = aoc.get_input(false) {
         i
     } else {
@@ -103,7 +97,7 @@ where
 }
 
 pub fn transpose(grid: &Vec<Vec<u32>>) -> Vec<Vec<u32>> {
-    let mut transposed = vec![vec![0; grid[0].len()]; grid.len()];
+    let mut transposed = vec![vec![0; grid.len()]; grid[0].len()];
     for (i, row) in grid.iter().enumerate() {
         for (j, v) in row.iter().enumerate() {
             transposed[j][i] = *v;
