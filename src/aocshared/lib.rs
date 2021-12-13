@@ -30,6 +30,10 @@ pub fn get_lines_as_numbers(lines: &str) -> Vec<u32> {
     lines.lines().map(|s| s.parse::<u32>().unwrap()).collect()
 }
 
+pub fn get_lines_as_numbers_u64(lines: &str) -> Vec<u64> {
+    lines.lines().map(|s| s.parse::<u64>().unwrap()).collect()
+}
+
 pub fn get_lines_as_strs(lines: &str) -> Vec<&str> {
     lines.lines().collect()
 }
