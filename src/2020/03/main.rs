@@ -1,12 +1,13 @@
-use aocshared::get_input;
+use aocshared::*;
 
 const YEAR: i32 = 2020;
 const DAY: u32 = 03;
 
 fn main() {
     let i = get_input(YEAR, DAY);
-    part1(&i);
-    part2(&i);
+    println!("Advent of Code {}-{:02}", YEAR, DAY);
+    println!("Part 1: [{}]", part1(&i));
+    println!("Part 2: [{}]", part2(&i));
 }
 
 const TREE: char = '#';
@@ -26,30 +27,16 @@ fn count_trees(landscape: &Vec<Vec<char>>, slope: (usize, usize)) -> i32 {
 }
 
 fn part1(data: &String) -> i32 {
-    println!("Part 1");
-    let landscape = data
-        .split("\n")
-        .filter(|s| !s.is_empty())
-        .map(|s| s.chars().collect::<Vec<char>>())
-        .collect::<Vec<Vec<char>>>();
-    let result = count_trees(&landscape, (3, 1));
-    println!("Part 1 Result: {}", result);
-    return result;
+    let landscape = get_lines_as_vec_chars(data);
+    count_trees(&landscape, (3, 1))
 }
 
 fn part2(data: &String) -> i32 {
-    println!("Part 2");
-    let landscape = data
-        .split("\n")
-        .filter(|s| !s.is_empty())
-        .map(|s| s.chars().collect::<Vec<char>>())
-        .collect::<Vec<Vec<char>>>();
+    let landscape = get_lines_as_vec_chars(data);
     let slopes = vec![(1, 1), (3, 1), (5, 1), (7, 1), (1, 2)];
-    let result = slopes
+    slopes
         .iter()
-        .fold(1, |acc, slope| acc * count_trees(&landscape, *slope));
-    println!("Part 2 Result: {}", result);
-    return result;
+        .fold(1, |acc, slope| acc * count_trees(&landscape, *slope))
 }
 
 #[cfg(test)]

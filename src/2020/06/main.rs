@@ -6,29 +6,26 @@ const DAY: u32 = 06;
 
 fn main() {
     let i = get_input(YEAR, DAY);
-    part1(&i);
-    part2(&i);
+    println!("Advent of Code {}-{:02}", YEAR, DAY);
+    println!("Part 1: [{}]", part1(&i));
+    println!("Part 2: [{}]", part2(&i));
 }
 
-fn part1(data: &String) -> i32 {
-    println!("Part 1");
+fn part1(data: &String) -> usize {
     let mut input = data.clone();
     input.push_str("\n");
-    let result = input
+    input
         .replace("\n\n", "|")
         .replace("\n", "")
         .split("|")
         .map(|x| x.chars().collect::<HashSet<char>>().len())
-        .sum::<usize>();
-    println!("Part 1 Result: {}", result);
-    return result as i32;
+        .sum::<usize>()
 }
 
-fn part2(data: &String) -> i32 {
-    println!("Part 2");
+fn part2(data: &String) -> usize {
     let mut input = data.clone();
     input.push_str("\n");
-    let result = input
+    input
         .replace("\n\n", "|")
         .replace("\n", " ")
         .split("|")
@@ -40,9 +37,7 @@ fn part2(data: &String) -> i32 {
                 .map(|x| x.len())
                 .unwrap_or(0)
         })
-        .sum::<usize>();
-    println!("Part 2 Result: {}", result);
-    return result as i32;
+        .sum::<usize>()
 }
 
 #[cfg(test)]

@@ -1,4 +1,4 @@
-use aocshared::get_input;
+use aocshared::*;
 use regex::Regex;
 
 const YEAR: i32 = 2020;
@@ -6,19 +6,15 @@ const DAY: u32 = 02;
 
 fn main() {
     let i = get_input(YEAR, DAY);
-    part1(&i);
-    part2(&i);
+    println!("Advent of Code {}-{:02}", YEAR, DAY);
+    println!("Part 1: [{}]", part1(&i));
+    println!("Part 2: [{}]", part2(&i));
 }
 
-fn part1(data: &String) -> i32 {
-    println!("Part 1");
-    let lines = data
-        .split("\n")
-        .filter(|s| !s.is_empty())
-        .collect::<Vec<&str>>();
-
+fn part1(data: &String) -> usize {
+    let lines = get_lines_as_strs(data);
     let re = Regex::new(r"(\d+)-(\d+) (\w): (\w+)").unwrap();
-    let result = lines
+    lines
         .iter()
         .map(|s| {
             let caps = re.captures(s).unwrap();
@@ -44,21 +40,13 @@ fn part1(data: &String) -> i32 {
                 .unwrap();
             &cnt >= min && &cnt <= max
         })
-        .count();
-
-    println!("Part 1 Result: {}", result);
-    return result as i32;
+        .count()
 }
 
-fn part2(data: &String) -> i32 {
-    println!("Part 2");
-    let lines = data
-        .split("\n")
-        .filter(|s| !s.is_empty())
-        .collect::<Vec<&str>>();
-
+fn part2(data: &String) -> usize {
+    let lines = get_lines_as_strs(data);
     let re = Regex::new(r"(\d+)-(\d+) (\w): (\w+)").unwrap();
-    let result = lines
+    lines
         .iter()
         .map(|s| {
             let caps = re.captures(s).unwrap();
@@ -80,9 +68,7 @@ fn part2(data: &String) -> i32 {
             let at_max = &password[(max - 1) as usize] == letter;
             at_min ^ at_max
         })
-        .count();
-    println!("Part 2 Result: {}", result);
-    return result as i32;
+        .count()
 }
 
 #[cfg(test)]

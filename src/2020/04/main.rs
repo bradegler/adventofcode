@@ -1,4 +1,4 @@
-use aocshared::get_input;
+use aocshared::*;
 use regex::Regex;
 
 const YEAR: i32 = 2020;
@@ -6,8 +6,9 @@ const DAY: u32 = 04;
 
 fn main() {
     let i = get_input(YEAR, DAY);
-    part1(&i);
-    part2(&i);
+    println!("Advent of Code {}-{:02}", YEAR, DAY);
+    println!("Part 1: [{}]", part1(&i));
+    println!("Part 2: [{}]", part2(&i));
 }
 
 fn is_valid_p1(map: &std::collections::HashMap<&str, &str>) -> bool {
@@ -61,10 +62,9 @@ fn is_valid_p2(map: &std::collections::HashMap<&str, &str>) -> bool {
     byr && iyr && eyr && hgt && hcl && ecl && pid
 }
 
-fn part1(data: &String) -> i32 {
-    println!("Part 1");
-    let merged = data.replace("\n\n", "|").replace("\n", " ");
-    let result = merged
+fn part1(data: &String) -> usize {
+    data.replace("\n\n", "|")
+        .replace("\n", " ")
         .split("|")
         .map(|s| {
             let mut map = std::collections::HashMap::new();
@@ -78,15 +78,12 @@ fn part1(data: &String) -> i32 {
             map
         })
         .filter(|m| is_valid_p1(m))
-        .count();
-    println!("Part 1 Result: {}", result);
-    return result.try_into().unwrap();
+        .count()
 }
 
-fn part2(data: &String) -> i32 {
-    println!("Part 2");
-    let merged = data.replace("\n\n", "|").replace("\n", " ");
-    let result = merged
+fn part2(data: &String) -> usize {
+    data.replace("\n\n", "|")
+        .replace("\n", " ")
         .split("|")
         .map(|s| {
             let mut map = std::collections::HashMap::new();
@@ -100,9 +97,7 @@ fn part2(data: &String) -> i32 {
             map
         })
         .filter(|m| is_valid_p2(m))
-        .count();
-    println!("Part 2 Result: {}", result);
-    return result.try_into().unwrap();
+        .count()
 }
 
 #[cfg(test)]

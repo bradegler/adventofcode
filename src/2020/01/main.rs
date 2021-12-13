@@ -1,22 +1,17 @@
-use aocshared::get_input;
+use aocshared::*;
 
 const YEAR: i32 = 2020;
 const DAY: u32 = 01;
 
 fn main() {
     let i = get_input(YEAR, DAY);
-    part1(&i);
-    part2(&i);
+    println!("Advent of Code {}-{:02}", YEAR, DAY);
+    println!("Part 1: [{}]", part1(&i));
+    println!("Part 2: [{}]", part2(&i));
 }
 
-fn part1(data: &String) -> i32 {
-    println!("Part 1");
-    let entries = data
-        .split("\n")
-        .filter(|s| !s.is_empty())
-        .map(|s| s.parse::<i32>().unwrap())
-        .collect::<Vec<i32>>();
-
+fn part1(data: &String) -> u32 {
+    let entries = get_lines_as_numbers(data);
     let mut result = 0;
     for idx in 0..entries.len() {
         for jdx in idx + 1..entries.len() {
@@ -29,18 +24,11 @@ fn part1(data: &String) -> i32 {
             break;
         }
     }
-    println!("Part 1 Result: {}", result);
-    return result;
+    result
 }
 
-fn part2(data: &String) -> i32 {
-    println!("Part 2");
-    let entries = data
-        .split("\n")
-        .filter(|s| !s.is_empty())
-        .map(|s| s.parse::<i32>().unwrap())
-        .collect::<Vec<i32>>();
-
+fn part2(data: &String) -> u32 {
+    let entries = get_lines_as_numbers(data);
     let mut result = 0;
     for idx in 0..entries.len() {
         for jdx in idx + 1..entries.len() {
@@ -55,8 +43,7 @@ fn part2(data: &String) -> i32 {
             break;
         }
     }
-    println!("Part 2 Result: {}", result);
-    return result;
+    result
 }
 
 #[cfg(test)]

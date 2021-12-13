@@ -1,40 +1,31 @@
-use aocshared::get_input;
+use aocshared::*;
 
 const YEAR: i32 = 2020;
 const DAY: u32 = 05;
 
 fn main() {
     let i = get_input(YEAR, DAY);
-    part1(&i);
-    part2(&i);
+    println!("Advent of Code {}-{:02}", YEAR, DAY);
+    println!("Part 1: [{}]", part1(&i));
+    println!("Part 2: [{}]", part2(&i));
 }
 
 fn part1(data: &String) -> i32 {
-    println!("Part 1");
-
-    let result = data
-        .split("\n")
-        .filter(|s| !s.is_empty())
+    get_lines_as_strs(data)
+        .iter()
         .map(|s| calc_seat_number(s))
         .max()
-        .unwrap();
-
-    println!("Part 1 Result: {}", result);
-    return result;
+        .unwrap()
 }
 
 fn part2(data: &String) -> i32 {
-    println!("Part 2");
-    let mut passes = data
-        .split("\n")
-        .filter(|s| !s.is_empty())
+    let mut passes = get_lines_as_strs(data)
+        .iter()
         .map(|s| calc_seat_number(s))
         .collect::<Vec<i32>>();
     println!("{}", passes.len());
     passes.sort();
-    let result = passes.windows(2).find(|w| w[1] - w[0] == 2).unwrap()[0] + 1;
-    println!("Part 2 Result: {}", result);
-    return result;
+    passes.windows(2).find(|w| w[1] - w[0] == 2).unwrap()[0] + 1
 }
 
 fn calc_seat_number(inst: &str) -> i32 {
