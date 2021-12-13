@@ -1,4 +1,4 @@
-use aocshared::get_input;
+use aocshared::*;
 use itertools::Itertools;
 
 const YEAR: i32 = 2021;
@@ -6,44 +6,32 @@ const DAY: u32 = 08;
 
 fn main() {
     let i = get_input(YEAR, DAY);
-    part1(&i);
-    part2(&i);
+    println!("Advent of Code {}-{:02}", YEAR, DAY);
+    println!("Part 1: [{}]", part1(&i));
+    println!("Part 2: [{}]", part2(&i));
 }
 
 fn part1(data: &String) -> i32 {
-    println!("Part 1");
-    let input = data
-        .split("\n")
-        .filter(|s| !s.is_empty())
-        .collect::<Vec<&str>>();
-
-    let mut sum = 0;
-    for line in input {
+    let input = get_lines_as_strs(data);
+    let result = input.iter().fold(0, |sum, line| {
         let mut parts = line.split(" | ");
         let patterns = parts.next().unwrap().split(" ").collect::<Vec<&str>>();
         let count_lengths = patterns.iter().fold(vec![0; 7], |mut acc, s| {
             acc[s.len() - 1] += 1;
             acc
         });
-        println!("{:?}", count_lengths);
         let segments = parts.next().unwrap().split(" ").collect::<Vec<&str>>();
-        sum += segments
+        sum + segments
             .iter()
             .filter(|s| count_lengths[s.len() - 1] == 1)
-            .count() as i32;
-
-        println!("{:?}", segments);
-    }
-
-    let result = sum;
-    println!("Part 1 Result: {}", result);
-    return result;
+            .count() as i32
+    });
+    result
 }
 
 fn part2(data: &String) -> i32 {
-    println!("Part 2");
-    let input = data
-        .lines()
+    let input = get_lines_as_strs(data)
+        .iter()
         .map(|l| {
             let (a, b) = l.split_once(" | ").unwrap();
             let x = a.split_whitespace().collect::<Vec<_>>();
@@ -61,8 +49,7 @@ fn part2(data: &String) -> i32 {
                 .unwrap()
         })
         .sum::<usize>();
-    println!("Part 2 Result: {}", result);
-    return result.try_into().unwrap();
+    result.try_into().unwrap()
 }
 
 fn display_digit(perm: &[char], s: &str) -> Option<usize> {
