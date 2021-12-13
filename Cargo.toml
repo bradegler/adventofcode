@@ -9,6 +9,7 @@ regex = "1.5.4"
 grid = "0.6.0"
 aocf = "0.1.15"
 itertools = "0.10"
+petgraph = "0.6.0"
 
 
 [lib]
@@ -86,3 +87,7 @@ path = "src/2021/10/main.rs"
 [[bin]]
 name = "aoc2021_11"
 path = "src/2021/11/main.rs"
+
+[[bin]]
+name = "aoc2021_12"
+path = "src/2021/12/main.rs"
