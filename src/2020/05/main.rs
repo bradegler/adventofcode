@@ -80,7 +80,6 @@ fn calc_seat_number(inst: &str) -> i32 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use aocshared::get_test_input;
     #[test]
     fn t2020_05_calc_seat() {
         assert_eq!(357, calc_seat_number("FBFBBFFRLR"));

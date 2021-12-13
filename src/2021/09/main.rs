@@ -1,4 +1,4 @@
-use aocshared::get_input;
+use aocshared::*;
 use itertools::Itertools;
 use std::collections::HashSet;
 
@@ -7,21 +7,13 @@ const DAY: u32 = 09;
 
 fn main() {
     let i = get_input(YEAR, DAY);
-    part1(&i);
-    part2(&i);
+    println!("Advent of Code {}-{:02}", YEAR, DAY);
+    println!("Part 1: [{}]", part1(&i));
+    println!("Part 2: [{}]", part2(&i));
 }
 
 fn part1(data: &String) -> i32 {
-    println!("Part 1");
-    let input = data
-        .lines()
-        .map(|x| {
-            x.chars()
-                .map(|c| c.to_digit(10).unwrap())
-                .collect::<Vec<u32>>()
-        })
-        .collect::<Vec<Vec<u32>>>();
-
+    let input = get_lines_as_vec_u32(data);
     let mut connections = vec![];
     for y in 0..input.len() {
         let row = &input[y];
@@ -62,8 +54,7 @@ fn part1(data: &String) -> i32 {
         })
         .fold(0u32, |acc, x| acc + x);
 
-    println!("Part 1 Result: {}", result);
-    return result.try_into().unwrap();
+    result.try_into().unwrap()
 }
 
 fn remove_component((x, y): (i32, i32), coords: &mut HashSet<(i32, i32)>) -> usize {
@@ -78,16 +69,14 @@ fn remove_component((x, y): (i32, i32), coords: &mut HashSet<(i32, i32)>) -> usi
 }
 
 fn part2(data: &String) -> i32 {
-    println!("Part 1");
     let input = data
         .lines()
         .map(|l| l.bytes().map(|c| c - b'0').collect())
         .collect::<Vec<_>>();
-    let result: usize = part2_run(&input).try_into().unwrap();
-    println!("Part 1 Result: {}", result);
-    return result.try_into().unwrap();
+    let result: i32 = run(&input).try_into().unwrap();
+    result
 }
-fn part2_run(input: &[Vec<u8>]) -> usize {
+fn run(input: &[Vec<u8>]) -> usize {
     let mut points = (0..input[0].len())
         .cartesian_product(0..input.len())
         .filter(|&(x, y)| input[y][x] != 9)

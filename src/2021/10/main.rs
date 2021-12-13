@@ -1,4 +1,4 @@
-use aocshared::get_input;
+use aocshared::*;
 use std::collections::HashMap;
 
 const YEAR: i32 = 2021;
@@ -6,13 +6,12 @@ const DAY: u32 = 10;
 
 fn main() {
     let i = get_input(YEAR, DAY);
-    part1(&i);
-    part2(&i);
+    println!("Advent of Code {}-{:02}", YEAR, DAY);
+    println!("Part 1: [{}]", part1(&i));
+    println!("Part 2: [{}]", part2(&i));
 }
 
 fn part1(data: &String) -> i32 {
-    println!("Part 1");
-
     let mut scores = HashMap::new();
     scores.insert(')', 3);
     scores.insert(']', 57);
@@ -22,12 +21,9 @@ fn part1(data: &String) -> i32 {
     let openers = vec!['(', '[', '{', '<'];
     let closers = vec![')', ']', '}', '>'];
 
-    let input = data
-        .lines()
-        .map(|x| x.chars().collect::<Vec<char>>())
-        .collect::<Vec<Vec<char>>>();
+    let input = get_lines_as_vec_chars(data);
 
-    let mut score = 0;
+    let mut result = 0;
     for line in input {
         let mut stack: Vec<char> = Vec::new();
         for c in line {
@@ -39,20 +35,16 @@ fn part1(data: &String) -> i32 {
                 let closer_index = closers.iter().position(|x| *x == c).unwrap();
                 if last_open_index != closer_index {
                     // Invalid match
-                    score += *scores.get(&c).unwrap();
+                    result += *scores.get(&c).unwrap();
                     break;
                 }
             }
         }
     }
-
-    let result = score;
-    println!("Part 1 Result: {}", result);
-    return result;
+    result
 }
 
 fn part2(data: &String) -> i64 {
-    println!("Part 2");
     let mut scores = HashMap::new();
     scores.insert(')', 1);
     scores.insert(']', 2);
@@ -61,11 +53,7 @@ fn part2(data: &String) -> i64 {
     let openers = vec!['(', '[', '{', '<'];
     let closers = vec![')', ']', '}', '>'];
 
-    let input = data
-        .lines()
-        .map(|x| x.chars().collect::<Vec<char>>())
-        .collect::<Vec<Vec<char>>>();
-
+    let input = get_lines_as_vec_chars(data);
     let incomplete = input
         .iter()
         .filter(|line| {
@@ -105,10 +93,8 @@ fn part2(data: &String) -> i64 {
         );
     }
     line_scores.sort();
-    println!("{:?}", line_scores);
     let result = line_scores[line_scores.len() / 2];
-    println!("Part 2 Result: {}", result);
-    return result;
+    result
 }
 
 #[cfg(test)]

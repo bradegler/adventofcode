@@ -1,4 +1,4 @@
-use aocshared::get_input;
+use aocshared::*;
 use std::collections::HashSet;
 
 const YEAR: i32 = 2021;
@@ -6,8 +6,9 @@ const DAY: u32 = 11;
 
 fn main() {
     let i = get_input(YEAR, DAY);
-    part1(&i);
-    part2(&i);
+    println!("Advent of Code {}-{:02}", YEAR, DAY);
+    println!("Part 1: [{}]", part1(&i));
+    println!("Part 2: [{}]", part2(&i));
 }
 
 fn increment_point(
@@ -59,17 +60,7 @@ fn increment_adj(
 }
 
 fn part1(data: &String) -> i32 {
-    println!("Part 1");
-
-    let mut grid = data
-        .lines()
-        .map(|x| {
-            x.chars()
-                .map(|c| c.to_digit(10).unwrap())
-                .collect::<Vec<u32>>()
-        })
-        .collect::<Vec<Vec<u32>>>();
-
+    let mut grid = get_lines_as_vec_u32(data);
     let mut result = 0;
 
     for _ in 0..100 {
@@ -80,22 +71,11 @@ fn part1(data: &String) -> i32 {
             }
         }
     }
-
-    println!("Part 1 Result: {}", result);
-    return result.try_into().unwrap();
+    result.try_into().unwrap()
 }
 
 fn part2(data: &String) -> i32 {
-    println!("Part 2");
-    let mut grid = data
-        .lines()
-        .map(|x| {
-            x.chars()
-                .map(|c| c.to_digit(10).unwrap())
-                .collect::<Vec<u32>>()
-        })
-        .collect::<Vec<Vec<u32>>>();
-
+    let mut grid = get_lines_as_vec_u32(data);
     let mut result = 0;
 
     loop {
@@ -110,9 +90,7 @@ fn part2(data: &String) -> i32 {
             break;
         }
     }
-
-    println!("Part 2 Result: {}", result);
-    return result.try_into().unwrap();
+    result.try_into().unwrap()
 }
 
 #[cfg(test)]

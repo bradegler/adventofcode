@@ -122,12 +122,6 @@ pub fn transpose_bool(grid: &Vec<Vec<bool>>) -> Vec<Vec<bool>> {
     transposed
 }
 
-struct Grid<T> {
-    pub grid: Vec<Vec<T>>,
-    pub width: usize,
-    pub height: usize,
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
