@@ -25,6 +25,13 @@ pub fn get_test_input(year: i32, day: u32) -> String {
     }
 }
 
+pub fn get_numbers_from_line(line: &str) -> Vec<i32> {
+    line.trim()
+        .split(",")
+        .map(|s| s.parse::<i32>().unwrap())
+        .collect()
+}
+
 pub fn get_lines_as_numbers(lines: &str) -> Vec<u32> {
     lines.lines().map(|s| s.parse::<u32>().unwrap()).collect()
 }

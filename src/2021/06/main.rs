@@ -1,48 +1,40 @@
-use aocshared::get_input;
+use aocshared::*;
 
 const YEAR: i32 = 2021;
 const DAY: u32 = 06;
 
 fn main() {
     let i = get_input(YEAR, DAY);
-    part1(&i);
-    part2(&i);
+    println!("Advent of Code {}-{:02}", YEAR, DAY);
+    println!("Part 1: [{}]", part1(&i));
+    println!("Part 2: [{}]", part2(&i));
 }
 
 fn spawn_count(input: &str, days: i32) -> i64 {
-    let start = input
-        .split(",")
-        .map(|x| x.trim().parse::<i32>().unwrap())
-        .collect::<Vec<i32>>();
-
-    let mut fish_days = vec![0; 9];
-    start.iter().for_each(|x| fish_days[*x as usize] += 1);
+    let start = get_numbers_from_line(input);
+    let mut fish_days = start.iter().fold(vec![0; 9], |mut acc, x| {
+        acc[*x as usize] += 1;
+        acc
+    });
     for _ in 1..=days {
-        let mut new_fish_days = vec![0; 9];
-        for i in 0..8 {
-            if i == 0 {
-                new_fish_days[6] = fish_days[i];
-                new_fish_days[8] = fish_days[i];
+        fish_days = (0..8).fold(vec![0; 9], |mut acc, x| {
+            if x == 0 {
+                acc[6] = fish_days[x];
+                acc[8] = fish_days[x];
             }
-            new_fish_days[i] = new_fish_days[i] + fish_days[i + 1];
-        }
-        fish_days = new_fish_days;
+            acc[x] = acc[x] + fish_days[x + 1];
+            acc
+        });
     }
     fish_days.iter().sum::<i64>()
 }
 
 fn part1(data: &String) -> i64 {
-    println!("Part 1");
-    let result = spawn_count(data, 80);
-    println!("Part 1 Result: {}", result);
-    return result;
+    spawn_count(data, 80)
 }
 
 fn part2(data: &String) -> i64 {
-    println!("Part 2");
-    let result = spawn_count(data, 256);
-    println!("Part 2 Result: {}", result);
-    return result;
+    spawn_count(data, 256)
 }
 
 #[cfg(test)]

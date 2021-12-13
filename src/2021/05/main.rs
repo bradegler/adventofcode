@@ -1,5 +1,4 @@
-use aocshared::get_input;
-use grid::Grid;
+use aocshared::*;
 use regex::Regex;
 
 const YEAR: i32 = 2021;
@@ -7,21 +6,16 @@ const DAY: u32 = 05;
 
 fn main() {
     let i = get_input(YEAR, DAY);
-    part1(&i);
-    part2(&i);
+    println!("Advent of Code {}-{:02}", YEAR, DAY);
+    println!("Part 1: [{}]", part1(&i));
+    println!("Part 2: [{}]", part2(&i));
 }
 
 fn part1(data: &String) -> i32 {
-    println!("Part 1");
-    let lines = data
-        .split("\n")
-        .filter(|s| !s.is_empty())
-        .collect::<Vec<&str>>();
-
+    let lines = get_lines_as_strs(data);
     let re = Regex::new(r"(\d+),(\d+) -> (\d+),(\d+)").unwrap();
     let grid_size = 1000;
-    let mut area: Grid<i32> = Grid::new(grid_size, grid_size);
-    let default = 0;
+    let mut area: Vec<Vec<i32>> = vec![vec![0; grid_size as usize]; grid_size as usize];
     lines
         .iter()
         .map(|s| {
@@ -39,15 +33,16 @@ fn part1(data: &String) -> i32 {
             let mut x = x1;
             let mut y = y1;
             while (x != x2) || (y != y2) {
-                area[y as usize][x as usize] =
-                    area.get(y as usize, x as usize).unwrap_or(&default) + 1;
+                area[y as usize][x as usize] = area[y as usize][x as usize] + 1;
                 x += xmod;
                 y += ymod;
             }
-            area[y as usize][x as usize] = area.get(y as usize, x as usize).unwrap_or(&default) + 1;
+            area[y as usize][x as usize] = area[y as usize][x as usize] + 1;
         });
-    let result = area.iter().filter(|v| **v > 1).count();
-    println!("Part 1 Result: {}", result);
+    let result: usize = area
+        .iter()
+        .map(|r| r.iter().filter(|c| **c > 1).count())
+        .sum();
     return result.try_into().unwrap();
 }
 
@@ -62,16 +57,10 @@ fn direction(a: i32, b: i32) -> i32 {
 }
 
 fn part2(data: &String) -> i32 {
-    println!("Part 2");
-    let lines = data
-        .split("\n")
-        .filter(|s| !s.is_empty())
-        .collect::<Vec<&str>>();
-
+    let lines = get_lines_as_strs(data);
     let re = Regex::new(r"(\d+),(\d+) -> (\d+),(\d+)").unwrap();
     let grid_size = 1000;
-    let mut area: Grid<i32> = Grid::new(grid_size, grid_size);
-    let default = 0;
+    let mut area: Vec<Vec<i32>> = vec![vec![0; grid_size as usize]; grid_size as usize];
     lines
         .iter()
         .map(|s| {
@@ -88,15 +77,16 @@ fn part2(data: &String) -> i32 {
             let mut x = x1;
             let mut y = y1;
             while (x != x2) || (y != y2) {
-                area[y as usize][x as usize] =
-                    area.get(y as usize, x as usize).unwrap_or(&default) + 1;
+                area[y as usize][x as usize] = area[y as usize][x as usize] + 1;
                 x += xmod;
                 y += ymod;
             }
-            area[y as usize][x as usize] = area.get(y as usize, x as usize).unwrap_or(&default) + 1;
+            area[y as usize][x as usize] = area[y as usize][x as usize] + 1;
         });
-    let result = area.iter().filter(|v| **v > 1).count();
-    println!("Part 2 Result: {}", result);
+    let result: usize = area
+        .iter()
+        .map(|r| r.iter().filter(|c| **c > 1).count())
+        .sum();
     return result.try_into().unwrap();
 }
 
