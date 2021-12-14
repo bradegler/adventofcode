@@ -1,4 +1,6 @@
 use aocshared::*;
+use std::collections::HashMap;
+use std::collections::HashSet;
 
 const YEAR: i32 = 2020;
 const DAY: u32 = 10;
@@ -22,8 +24,32 @@ fn part1(data: &String) -> u64 {
     (d1 * d3) as u64
 }
 
+fn possibilities(item: u64, memo_table: &mut HashMap<(u64, u64), u64>, data: &HashSet<u64>) -> u64 {
+    if item == 0 {
+        return 1u64;
+    }
+    let start = if item < 3 { 0 } else { item - 3 };
+    (start..item)
+        .filter(|x| data.contains(x))
+        .map(|x| {
+            let key = (item, x);
+            if !memo_table.contains_key(&key) {
+                let value = possibilities(x, memo_table, data);
+                memo_table.insert(key, value);
+            }
+            *memo_table.get(&key).unwrap()
+        })
+        .sum()
+}
+
 fn part2(data: &String) -> u64 {
-    0
+    let mut input = get_lines_as_numbers_u64(data);
+    input.insert(0, 0);
+    input.sort();
+    let end = input.last().unwrap() + 3;
+    input.push(end);
+    let data: HashSet<u64> = input.into_iter().collect();
+    possibilities(end, &mut HashMap::new(), &data)
 }
 
 #[cfg(test)]
