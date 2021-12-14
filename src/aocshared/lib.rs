@@ -38,6 +38,10 @@ pub fn get_lines_as_strs(lines: &str) -> Vec<&str> {
     lines.lines().collect()
 }
 
+pub fn get_lines_as_strs_rm_empty(lines: &str) -> Vec<&str> {
+    lines.lines().filter(|l| !l.is_empty()).collect()
+}
+
 pub fn get_lines_as_vec_chars(lines: &str) -> Vec<Vec<char>> {
     lines.lines().map(|s| s.chars().collect()).collect()
 }
