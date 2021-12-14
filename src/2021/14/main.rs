@@ -1,6 +1,5 @@
 use aocshared::*;
 use regex::Regex;
-use std::collections::BTreeMap;
 use std::collections::HashMap;
 
 const YEAR: i32 = 2021;
@@ -13,112 +12,88 @@ fn main() {
     println!("Part 2: [{}]", part2(&i));
 }
 
-fn part1(data: &String) -> i32 {
-    let input = get_lines_as_strs(data);
-    let mut initer = input.iter();
-    let template = initer.next().unwrap().chars().collect::<Vec<char>>();
-    let mut recipes = HashMap::new();
-    let re = Regex::new(r"(\w+) -> (\w)").unwrap();
-    loop {
-        let opt_recipe = initer.next();
-        if opt_recipe.is_none() {
-            break;
-        }
-        let recipe = opt_recipe.unwrap();
-        if recipe.is_empty() {
-            continue;
-        }
-        let captures = re.captures(recipe).unwrap();
-        recipes.insert(captures[1].to_string(), captures[2].to_string());
-    }
-    let mut t = template.clone();
-    for _ in 0..10 {
-        let mut t1 = t
-            .windows(2)
-            .map(|w| {
-                let lookup = w.into_iter().collect::<String>();
-                let mut ret = vec![w[0]];
-                ret.extend(recipes[&lookup].chars());
-                //ret.push(w[1]);
-                ret
-            })
-            .flatten()
-            .collect::<Vec<char>>();
-        t1.push(t[t.len() - 1]);
-        t = t1;
-    }
-    let v = t.iter().collect::<String>();
-    let counts = v.chars().into_iter().fold(vec![0; 26], |mut acc, c| {
-        acc[(c as u8 - b'A') as usize] += 1;
-        acc
-    });
-    let min = counts.iter().filter(|c| **c != 0).min().unwrap();
-    let max = counts.iter().max().unwrap();
-    max - min
+fn part1(data: &String) -> usize {
+    simulation(data, 10)
 }
 
-fn freq_map(ins: &str) -> HashMap<(char, char), usize> {
-    let mut chars = ins.chars().collect::<Vec<char>>();
+fn freq_map(data: &str) -> HashMap<(char, char), usize> {
+    let mut chars = data.chars().collect::<Vec<char>>();
     chars.sort_unstable();
     chars.dedup();
     // Create a map of all the pairs of chars
     let len = chars.len();
     (0..len)
-        .map(|i| (0..len).map(|j| (chars[i], chars[j])))
+        .map(|i| {
+            let ci = &chars[i];
+            (0..len).map(|j| ((*ci, chars[j]), 0))
+        })
         .flatten()
-        .collect::<HashMap<(char, char), usize>>()
+        .collect::<HashMap<_, _>>()
 }
 
 fn part2(data: &String) -> usize {
+    simulation(data, 40)
+}
+
+fn simulation(data: &String, iterations: u32) -> usize {
     let lines = get_lines_as_strs_rm_empty(data);
     let polymer = lines[0];
-    let re = Regex::new(r"(\w+) -> (\w)").unwrap();
+    let re = Regex::new(r"(\w)(\w) -> (\w)").unwrap();
     let conversions = lines[1..]
         .iter()
-        .map(|l| {
-            let captures = re.captures(l).unwrap();
-            (captures[1].to_string(), captures[2].to_string())
+        .map(|l| re.captures(l).unwrap())
+        .map(|captures| {
+            (
+                (
+                    captures
+                        .get(1)
+                        .map(|c| c.as_str().chars().next().unwrap())
+                        .unwrap(),
+                    captures
+                        .get(2)
+                        .map(|c| c.as_str().chars().next().unwrap())
+                        .unwrap(),
+                ),
+                captures
+                    .get(3)
+                    .map(|c| c.as_str().chars().next().unwrap())
+                    .unwrap(),
+            )
         })
-        .collect::<HashMap<_, _>>();
-    let mut freq = freq_map();
-    for i in 0..polymer.len() - 1 {
-        *freq.get_mut(&polymer[i..=i + 1]).unwrap() += 1;
-    }
-    for _ in 0..40 {
-        let mut new_freq = freq_map();
+        .collect::<HashMap<(_, _), _>>();
+    let mut freq = freq_map(data);
+    // Seed the polymer frequency values
+    polymer
+        .chars()
+        .collect::<Vec<_>>()
+        .windows(2)
+        .for_each(|w| *freq.get_mut(&(w[0], w[1])).unwrap() += 1);
+
+    let mut new_freq = freq.clone();
+    for _ in 0..iterations {
+        new_freq.iter_mut().for_each(|(_, v)| *v = 0);
         for (k, v) in freq.iter() {
-            if let Some(c) = conversions.get(k.as_str()) {
-                let k1 = format!("{}{}", k.chars().nth(0).unwrap(), c);
-                let k2 = format!("{}{}", c, k.chars().nth(1).unwrap());
-                *new_freq.get_mut(&k1).unwrap() += v;
-                *new_freq.get_mut(&k2).unwrap() += v;
+            if let Some(&c) = conversions.get(k) {
+                *new_freq.get_mut(&(k.0, c)).unwrap() += v;
+                *new_freq.get_mut(&(c, k.1)).unwrap() += v;
             } else {
-                *new_freq.get_mut(k.as_str()).unwrap() += v;
+                *new_freq.get_mut(k).unwrap() += v;
             }
         }
-        freq = new_freq;
+        std::mem::swap(&mut freq, &mut new_freq);
     }
 
-    let mut f = BTreeMap::new();
+    let mut f = HashMap::new();
     for (k, v) in freq {
-        let k = k.chars().collect::<Vec<_>>();
-        *f.entry(k[0]).or_insert(0) += v;
-        *f.entry(k[1]).or_insert(0) += v;
-    }
-    for (_, v) in &mut f {
-        if (*v) & 1 == 1 {
-            *v = *v / 2 + 1;
-        } else {
-            *v = *v / 2;
-        }
+        *f.entry(k.0).or_insert(0) += v;
+        *f.entry(k.1).or_insert(0) += v;
     }
     let mut vals = f
         .into_iter()
-        .map(|(_, v)| v)
+        .map(|(_, v)| if v & 1 == 1 { v / 2 + 1 } else { v / 2 })
         .filter(|v| *v != 0)
         .collect::<Vec<_>>();
-    vals.sort();
-    dbg!(&vals);
+    vals.sort_unstable();
     vals[vals.len() - 1] - vals[0]
 }
 
@@ -143,6 +118,6 @@ mod tests {
 
     #[test]
     fn t2021_14_rp2() {
-        assert_eq!(, part2(&get_input(YEAR, DAY)));
+        assert_eq!(3692219987038, part2(&get_input(YEAR, DAY)));
     }
 }
