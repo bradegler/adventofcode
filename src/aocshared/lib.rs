@@ -53,6 +53,17 @@ pub fn get_lines_as_vec_u32(lines: &str) -> Vec<Vec<u32>> {
         .collect()
 }
 
+pub fn get_lines_as_vec_usize(lines: &str) -> Vec<Vec<usize>> {
+    lines
+        .lines()
+        .map(|s| {
+            s.chars()
+                .map(|c| c.to_digit(10).unwrap() as usize)
+                .collect()
+        })
+        .collect()
+}
+
 // Splits a slice into equal sized chunks.
 pub fn chunks<T>(slice: &[T], mut size: usize) -> impl Iterator<Item = &[T]> {
     struct ChunksIterator<'a, I> {
