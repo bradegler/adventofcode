@@ -135,6 +135,36 @@ pub fn transpose_bool(grid: &Vec<Vec<bool>>) -> Vec<Vec<bool>> {
     transposed
 }
 
+pub fn get_adj_points(
+    (y, x): (usize, usize),
+    (width, height): (usize, usize),
+    allow_diagonal: bool,
+) -> Vec<(usize, usize)> {
+    let adj: Vec<(i32, i32)> = if allow_diagonal {
+        vec![
+            (y as i32 - 1, x as i32),
+            (y as i32 + 1, x as i32),
+            (y as i32, x as i32 - 1),
+            (y as i32, x as i32 + 1),
+            (y as i32 - 1, x as i32 - 1),
+            (y as i32 + 1, x as i32 + 1),
+            (y as i32 - 1, x as i32 + 1),
+            (y as i32 + 1, x as i32 - 1),
+        ]
+    } else {
+        vec![
+            (y as i32 - 1, x as i32),
+            (y as i32 + 1, x as i32),
+            (y as i32, x as i32 - 1),
+            (y as i32, x as i32 + 1),
+        ]
+    };
+    adj.into_iter()
+        .filter(|(y, x)| *y >= 0 && *x >= 0 && *y < height as i32 && *x < width as i32)
+        .map(|(y, x)| (y as usize, x as usize))
+        .collect::<Vec<(usize, usize)>>()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

@@ -11,36 +11,6 @@ fn main() {
     println!("Part 2: [{}]", part2(&i));
 }
 
-fn get_adj_points(
-    (y, x): (usize, usize),
-    (width, height): (usize, usize),
-    allow_diagonal: bool,
-) -> Vec<(usize, usize)> {
-    let adj: Vec<(i32, i32)> = if allow_diagonal {
-        vec![
-            (y as i32 - 1, x as i32),
-            (y as i32 + 1, x as i32),
-            (y as i32, x as i32 - 1),
-            (y as i32, x as i32 + 1),
-            (y as i32 - 1, x as i32 - 1),
-            (y as i32 + 1, x as i32 + 1),
-            (y as i32 - 1, x as i32 + 1),
-            (y as i32 + 1, x as i32 - 1),
-        ]
-    } else {
-        vec![
-            (y as i32 - 1, x as i32),
-            (y as i32 + 1, x as i32),
-            (y as i32, x as i32 - 1),
-            (y as i32, x as i32 + 1),
-        ]
-    };
-    adj.into_iter()
-        .filter(|(y, x)| *y >= 0 && *x >= 0 && *y < height as i32 && *x < width as i32)
-        .map(|(y, x)| (y as usize, x as usize))
-        .collect::<Vec<(usize, usize)>>()
-}
-
 fn solve(grid: &Vec<Vec<usize>>) -> usize {
     let rows = grid.len();
     let cols = grid[0].len();
@@ -62,9 +32,9 @@ fn solve(grid: &Vec<Vec<usize>>) -> usize {
             stack.push(((x1, y1), cost + grid[y1][x1]));
         }
 
-        stack.sort_by(|(_, cost_a), (_, cost_b)| return cost_b.cmp(&cost_a));
+        stack.sort_by(|(_, cost_a), (_, cost_b)| cost_b.cmp(&cost_a));
     }
-    return 0;
+    0
 }
 fn part1(data: &String) -> usize {
     let input = get_lines_as_vec_usize(data);
