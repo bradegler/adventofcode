@@ -69,52 +69,51 @@ fn part2(data: &String) -> i32 {
     let mut wy = 1;
     let mut wx = 10;
     for (ins, amt) in motions {
+        println!("{} {}", ins, amt);
         match ins.as_str() {
             "F" => {
-                by += ((by - wy) as i32).abs() * amt;
-                bx += ((bx - wx) as i32).abs() * amt;
-                wy = by + 1;
-                wx = bx + 10;
+                by += wy * amt;
+                bx += wx * amt;
             }
             "N" => wy += amt,
             "S" => wy -= amt,
             "E" => wx += amt,
             "W" => wx -= amt,
 
-            "L" => match amt {
-                90 => {
-                    wx = bx - wx;
-                    wy = by - wy;
-                }
-                180 => {
-                    wx = bx + wx;
-                }
-                270 => {
-                    wy = by + (wx - bx).abs();
-                    wx = by + (wy - by).abs();
-                }
-                _ => panic!("Invalid direction {}", amt),
-            },
-            "R" => match amt {
-                90 => {
-                    wy = by - (wx - bx).abs();
-                    wx = bx - (wy - by).abs();
-                }
-                180 => {
-                    wx = bx - wx;
-                }
-                270 => {
-                    wx = bx + wx;
-                    wy = by + wy;
-                }
-                _ => panic!("Invalid direction {}", amt),
-            },
+            "L" => {
+                let wp = rotate("L", amt, (wx, wy));
+                wx = wp.0;
+                wy = wp.1;
+            }
+            "R" => {
+                let wp = rotate("R", amt, (wx, wy));
+                wx = wp.0;
+                wy = wp.1;
+            }
             _ => panic!("Invalid instruction {}", ins),
         }
         println!("WP: {} {} - Boat: {}, {}", wx, wy, bx, by);
     }
     // Manhattan distance
     bx.abs() + by.abs()
+}
+
+fn rotate(direction: &str, angle: i32, (x, y): (i32, i32)) -> (i32, i32) {
+    match direction {
+        "L" => match angle {
+            90 => (-y, x),
+            180 => (-x, -y),
+            270 => (y, -x),
+            _ => unreachable!(),
+        },
+        "R" => match angle {
+            90 => (y, -x),
+            180 => (-x, -y),
+            270 => (-y, x),
+            _ => unreachable!(),
+        },
+        _ => unreachable!(),
+    }
 }
 
 #[cfg(test)]
@@ -138,6 +137,17 @@ mod tests {
 
     #[test]
     fn t2020_12_rp2() {
-        assert_eq!(0, part2(&get_input(YEAR, DAY)));
+        assert_eq!(42013, part2(&get_input(YEAR, DAY)));
+    }
+
+    #[test]
+    fn test_wp_rotation() {
+        assert_eq!((4, -10), rotate("R", 90, (10, 4)));
+        assert_eq!((-10, -4), rotate("R", 180, (10, 4)));
+        assert_eq!((-4, 10), rotate("R", 270, (10, 4)));
+
+        assert_eq!((-4, 10), rotate("L", 90, (10, 4)));
+        assert_eq!((-10, -4), rotate("L", 180, (10, 4)));
+        assert_eq!((4, -10), rotate("L", 270, (10, 4)));
     }
 }
