@@ -8,7 +8,7 @@ edition = "2021"
 regex = "1.5.4"
 aocf = "0.1.15"
 itertools = "0.10"
-
+num-integer = "0.1.44"
 
 [lib]
 name = "aocshared"
@@ -149,3 +149,6 @@ path = "src/2021/21/main.rs"
 [[bin]]
 name = "aoc2021_22"
 path = "src/2021/22/main.rs"
+[[bin]]
+name = "aoc2020_13"
+path = "src/2020/13/main.rs"
