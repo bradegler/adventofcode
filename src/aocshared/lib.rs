@@ -11,7 +11,7 @@ pub fn get_input(year: i32, day: u32) -> String {
 }
 
 pub fn get_test_input(year: i32, day: u32) -> String {
-    let file = format!("testdata/{}_{:0>2}.txt", year, day);
+    let file = format!("testdata/{}/{}_{:0>2}.txt", year, year, day);
     if let Ok(i) = read_to_string(&file) {
         i
     } else {

@@ -16,8 +16,9 @@ fi
 echo "${YEAR} ${DAY}"
 
 mkdir -p "src/$YEAR/$DAY"
+mkdir -p "testdata/${YEAR}"
 
-touch "testdata/${YEAR}_${DAY}.txt"
+touch "testdata/${YEAR}/${YEAR}_${DAY}.txt"
 
 cat gen/main_template.rs | sed "s/%%YEAR%%/${YEAR}/g" | sed "s/%%DAY%%/${DAY}/g" > "src/${YEAR}/${DAY}/main.rs"
 
@@ -25,3 +26,6 @@ echo >> Cargo.toml
 echo "[[bin]]" >> Cargo.toml
 echo "name = \"aoc${YEAR}_${DAY}\"" >> Cargo.toml
 echo "path = \"src/${YEAR}/${DAY}/main.rs\"" >> Cargo.toml
+
+
+code "src/${YEAR}/${DAY}/main.rs" "testdata/${YEAR}/${YEAR}_${DAY}.txt"
