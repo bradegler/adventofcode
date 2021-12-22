@@ -20,9 +20,6 @@ fn part1(data: &String) -> i32 {
         .map(|s| s.parse::<i32>().unwrap())
         .collect::<Vec<i32>>();
 
-    println!("{:?}", time);
-    println!("{:?}", busses);
-
     busses
         .iter()
         .map(|b| (b, b - time % b))
@@ -33,7 +30,6 @@ fn part1(data: &String) -> i32 {
 
 fn part2(data: &String) -> i64 {
     let input = get_lines_as_strs(data);
-    let time = input[0].parse::<i64>().unwrap();
     let busses = input[1]
         .split(",")
         .enumerate()
@@ -41,18 +37,19 @@ fn part2(data: &String) -> i64 {
         .map(|(i, s)| (i as i64, s.parse::<i64>().unwrap()))
         .collect::<Vec<(i64, i64)>>();
 
-    println!("{:?}", time);
-    println!("{:?}", busses);
-    let mut solution = busses[0].1;
-    let mut step = busses[0].1;
-
-    for bus in busses.iter().skip(1).copied() {
-        while (solution + bus.0) % bus.1 != 0 {
-            solution += step;
-        }
-        step = lcm(step, bus.1);
-    }
-    solution
+    busses
+        .iter()
+        .skip(1)
+        .fold(
+            (busses[0].1, busses[0].1),
+            |(mut solution, step), (idx, bus)| {
+                while (solution + idx) % bus != 0 {
+                    solution += step;
+                }
+                (solution, lcm(step, *bus))
+            },
+        )
+        .0
 }
 
 #[cfg(test)]
