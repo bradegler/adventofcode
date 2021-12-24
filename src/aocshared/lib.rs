@@ -46,6 +46,10 @@ pub fn get_lines_as_vec_chars(lines: &str) -> Vec<Vec<char>> {
     lines.lines().map(|s| s.chars().collect()).collect()
 }
 
+pub fn get_lines_as_vec_bytes(lines: &str) -> Vec<Vec<u8>> {
+    lines.lines().map(|s| s.bytes().collect()).collect()
+}
+
 pub fn get_lines_as_vec_u32(lines: &str) -> Vec<Vec<u32>> {
     lines
         .lines()

@@ -9,6 +9,7 @@ regex = "1.5.4"
 aocf = "0.1.15"
 itertools = "0.10"
 num-integer = "0.1.44"
+hashbrown = "0.11.2"
 
 [lib]
 name = "aocshared"
@@ -152,3 +153,11 @@ path = "src/2021/22/main.rs"
 [[bin]]
 name = "aoc2020_13"
 path = "src/2020/13/main.rs"
+
+[[bin]]
+name = "aoc2021_23"
+path = "src/2021/23/main.rs"
+
+[[bin]]
+name = "aoc2021_24"
+path = "src/2021/24/main.rs"
