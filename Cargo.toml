@@ -1,15 +1,15 @@
 [package]
-name = "aoc2021"
+name = "aoc2022"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [dependencies]
-regex = "1.5.4"
-aocf = "0.1.15"
+regex = "1.7.0"
+aocf = "0.1.18"
 itertools = "0.10"
 num-integer = "0.1.44"
-hashbrown = "0.11.2"
+hashbrown = "0.13.1"
 
 [lib]
 name = "aocshared"
@@ -169,3 +169,7 @@ path = "src/2021/25/main.rs"
 [[bin]]
 name = "aoc2020_14"
 path = "src/2020/14/main.rs"
+
+[[bin]]
+name = "aoc2022_01"
+path = "src/2022/01/main.rs"

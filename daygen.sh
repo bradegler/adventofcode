@@ -5,12 +5,12 @@ YEAR=$2
 
 # Default to current year
 if [ -z "${YEAR}" ]; then
-    YEAR=`date +%Y`
+    YEAR=$(date +%Y)
 fi
 
 # Default to current day
 if [ -z "${DAY}" ]; then
-    DAY=`date +%d`
+    DAY=$(date +%d)
 fi
 
 echo "${YEAR} ${DAY}"
@@ -20,12 +20,14 @@ mkdir -p "testdata/${YEAR}"
 
 touch "testdata/${YEAR}/${YEAR}_${DAY}.txt"
 
-cat gen/main_template.rs | sed "s/%%YEAR%%/${YEAR}/g" | sed "s/%%DAY%%/${DAY}/g" > "src/${YEAR}/${DAY}/main.rs"
+sed "s/%%YEAR%%/${YEAR}/g" < gen/main_template.rs | sed "s/%%DAY%%/${DAY}/g" > "src/${YEAR}/${DAY}/main.rs"
 
-echo >> Cargo.toml
-echo "[[bin]]" >> Cargo.toml
-echo "name = \"aoc${YEAR}_${DAY}\"" >> Cargo.toml
-echo "path = \"src/${YEAR}/${DAY}/main.rs\"" >> Cargo.toml
+{
+    echo 
+    echo "[[bin]]" 
+    echo "name = \"aoc${YEAR}_${DAY}\""
+    echo "path = \"src/${YEAR}/${DAY}/main.rs\""
+} >> Cargo.toml
 
 
 code "src/${YEAR}/${DAY}/main.rs" "testdata/${YEAR}/${YEAR}_${DAY}.txt"
