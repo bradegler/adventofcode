@@ -19,7 +19,7 @@ struct Board {
 impl Board {
     fn is_winner(&self) -> bool {
         self.state.iter().any(|row| row.iter().all(|&b| b))
-            || transpose_bool(&self.state)
+            || transpose(&self.state, false)
                 .iter()
                 .any(|row| row.iter().all(|&b| b))
     }

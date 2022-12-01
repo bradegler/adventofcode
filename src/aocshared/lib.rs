@@ -1,6 +1,7 @@
 use aocf::Aoc;
 use std::fs::read_to_string;
 
+/// Gets puzzle input for the provided year and day
 pub fn get_input(year: i32, day: u32) -> String {
     let mut aoc = Aoc::new().year(Some(year)).day(Some(day)).init().unwrap();
     if let Ok(i) = aoc.get_input(false) {
@@ -10,6 +11,7 @@ pub fn get_input(year: i32, day: u32) -> String {
     }
 }
 
+/// Gets test input from the sample file
 pub fn get_test_input(year: i32, day: u32) -> String {
     let file = format!("testdata/{}/{}_{:0>2}.txt", year, year, day);
     if let Ok(i) = read_to_string(&file) {
@@ -19,6 +21,16 @@ pub fn get_test_input(year: i32, day: u32) -> String {
     }
 }
 
+pub fn get_real_input(year: i32, day: u32) -> String {
+    let file = format!("testdata/{}/{}_{:0>2}.real", year, year, day);
+    if let Ok(i) = read_to_string(&file) {
+        i
+    } else {
+        panic!("No input found {}", &file);
+    }
+}
+
+/// Given a string of comma separated numers, create a Vec of i32
 pub fn get_numbers_from_line(line: &str) -> Vec<i32> {
     line.trim()
         .split(",")
@@ -26,30 +38,41 @@ pub fn get_numbers_from_line(line: &str) -> Vec<i32> {
         .collect()
 }
 
+/// Given a line delimited string, parse each line as a u32 and return a Vec 
 pub fn get_lines_as_numbers(lines: &str) -> Vec<u32> {
     lines.lines().map(|s| s.parse::<u32>().unwrap()).collect()
 }
 
+/// Given a line delimited string, parse each line as a u64 and return a Vec 
 pub fn get_lines_as_numbers_u64(lines: &str) -> Vec<u64> {
     lines.lines().map(|s| s.parse::<u64>().unwrap()).collect()
 }
 
+/// Given a line delimited string, convert each line to a string and return a Vec
 pub fn get_lines_as_strs(lines: &str) -> Vec<&str> {
     lines.lines().collect()
 }
 
+/// Given a line delimited string, convert each line to a string and return a Vec
+/// Remove all of the empty lines
 pub fn get_lines_as_strs_rm_empty(lines: &str) -> Vec<&str> {
     lines.lines().filter(|l| !l.is_empty()).collect()
 }
 
+/// Given a line delimited string, convert each line to a Vec of characters 
+/// and return a Vec of lines
 pub fn get_lines_as_vec_chars(lines: &str) -> Vec<Vec<char>> {
     lines.lines().map(|s| s.chars().collect()).collect()
 }
 
+/// Given a line delimited string, convert each line to a Vec of bytes 
+/// and return a Vec of lines
 pub fn get_lines_as_vec_bytes(lines: &str) -> Vec<Vec<u8>> {
     lines.lines().map(|s| s.bytes().collect()).collect()
 }
 
+/// Given a line delimited string, convert each line to a Vec of u32 
+/// Return a Vec of lines where each line is a Vec of u32s
 pub fn get_lines_as_vec_u32(lines: &str) -> Vec<Vec<u32>> {
     lines
         .lines()
@@ -57,6 +80,8 @@ pub fn get_lines_as_vec_u32(lines: &str) -> Vec<Vec<u32>> {
         .collect()
 }
 
+/// Given a line delimited string, convert each line to a Vec of usize 
+/// Return a Vec of lines where each line is a Vec of usize
 pub fn get_lines_as_vec_usize(lines: &str) -> Vec<Vec<usize>> {
     lines
         .lines()
@@ -68,7 +93,7 @@ pub fn get_lines_as_vec_usize(lines: &str) -> Vec<Vec<usize>> {
         .collect()
 }
 
-// Splits a slice into equal sized chunks.
+/// Splits a slice into equal sized chunks.
 pub fn chunks<T>(slice: &[T], mut size: usize) -> impl Iterator<Item = &[T]> {
     struct ChunksIterator<'a, I> {
         pub slice: &'a [I],
@@ -107,6 +132,7 @@ pub fn chunks<T>(slice: &[T], mut size: usize) -> impl Iterator<Item = &[T]> {
     }
 }
 
+/// Prints a Vec of Vecs which represents a 2d grid
 pub fn print_grid<T>(grid: &Vec<Vec<T>>)
 where
     T: std::fmt::Display,
@@ -119,8 +145,12 @@ where
     }
 }
 
-pub fn transpose(grid: &Vec<Vec<u32>>) -> Vec<Vec<u32>> {
-    let mut transposed = vec![vec![0; grid.len()]; grid[0].len()];
+/// Rotates a grid transposing x,y to y,x
+pub fn transpose<T>(grid: &Vec<Vec<T>>, default: T) -> Vec<Vec<T>> 
+where T: std::clone::Clone, 
+      T: std::marker::Copy
+{
+    let mut transposed = vec![vec![default; grid.len()]; grid[0].len()];
     for (i, row) in grid.iter().enumerate() {
         for (j, v) in row.iter().enumerate() {
             transposed[j][i] = *v;
@@ -129,16 +159,8 @@ pub fn transpose(grid: &Vec<Vec<u32>>) -> Vec<Vec<u32>> {
     transposed
 }
 
-pub fn transpose_bool(grid: &Vec<Vec<bool>>) -> Vec<Vec<bool>> {
-    let mut transposed = vec![vec![false; grid[0].len()]; grid.len()];
-    for (i, row) in grid.iter().enumerate() {
-        for (j, v) in row.iter().enumerate() {
-            transposed[j][i] = *v;
-        }
-    }
-    transposed
-}
-
+/// Given a point, x,y calculate all adjacent points including or excluding
+/// points diagonally adjacent
 pub fn get_adj_points(
     (y, x): (usize, usize),
     (width, height): (usize, usize),
@@ -228,7 +250,7 @@ mod tests {
     #[test]
     fn test_transpose() {
         let input = vec![vec![1, 2, 3], vec![4, 5, 6], vec![7, 8, 9]];
-        let output = transpose(&input);
+        let output = transpose(&input, 0);
         let expected = vec![vec![1, 4, 7], vec![2, 5, 8], vec![3, 6, 9]];
         assert_eq!(output, expected);
     }
