@@ -10,11 +10,11 @@ fn main() {
     println!("Part 2: [{}]", part2(&i));
 }
 
-fn part1(data: &String) -> i32 {
+fn part1(data: &String) -> u64 {
     0
 }
 
-fn part2(data: &String) -> i32 {
+fn part2(data: &String) -> u64 {
     0
 }
 

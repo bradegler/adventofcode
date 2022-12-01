@@ -72,6 +72,10 @@ pub fn get_lines_as_vec_bytes(lines: &str) -> Vec<Vec<u8>> {
     lines.lines().map(|s| s.bytes().collect()).collect()
 }
 
+pub fn strs_to_u64s(strs: Vec<&str>) -> Vec<u64> {
+    strs.iter().map(|s| s.parse::<u64>().unwrap()).collect()
+}
+
 /// Given a line delimited string, convert each line to a Vec of u32 
 /// Return a Vec of lines where each line is a Vec of u32s
 pub fn get_lines_as_vec_u32(lines: &str) -> Vec<Vec<u32>> {
