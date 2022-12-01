@@ -15,7 +15,7 @@ fn part1(data: &String) -> u64 {
     get_lines_as_strs(data)
         .split(|l| l.trim().len() == 0)
         .into_iter().map(|elf| elf.iter().map(|s| s.parse::<u64>().unwrap()).sum::<u64>()
-    ).sorted().rev().take(1).sum()
+    ).max().unwrap()
 }
 
 fn part2(data: &String) -> u64 {
