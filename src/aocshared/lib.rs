@@ -21,6 +21,7 @@ pub fn get_test_input(year: i32, day: u32) -> String {
     }
 }
 
+/// Gets real input from a local file
 pub fn get_real_input(year: i32, day: u32) -> String {
     let file = format!("testdata/{}/{}_{:0>2}.real", year, year, day);
     if let Ok(i) = read_to_string(&file) {

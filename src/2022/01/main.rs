@@ -41,11 +41,11 @@ mod tests {
 
     #[test]
     fn t2022_01_rp1() {
-        assert_eq!(71780, part1(&get_real_input(YEAR, DAY)));
+        assert_eq!(71780, part1(&get_input(YEAR, DAY)));
     }
 
     #[test]
     fn t2022_01_rp2() {
-        assert_eq!(212489, part2(&get_real_input(YEAR, DAY)));
+        assert_eq!(212489, part2(&get_input(YEAR, DAY)));
     }
 }
