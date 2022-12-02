@@ -11,12 +11,9 @@ fn main() {
     println!("Part 2: [{}]", part2(&i));
 }
 
-#[derive(PartialEq, Eq, Hash, Debug)]
-enum Moves {
-    Rock,
-    Paper,
-    Scissors
-}
+const ROCK: u64 = 1;
+const PAPER: u64 = 2;
+const SCISSORS: u64 = 3;
 
 const WIN: u64 = 6;
 const DRAW: u64 = 3;
@@ -25,48 +22,38 @@ const LOSE: u64 = 0;
 fn part1(data: &String) -> u64 {
 
     let mut rps = HashMap::new();
-    rps.insert('A', Moves::Rock);
-    rps.insert('B', Moves::Paper);
-    rps.insert('C', Moves::Scissors);
-    rps.insert('X', Moves::Rock);
-    rps.insert('Y', Moves::Paper);
-    rps.insert('Z', Moves::Scissors);
+    rps.insert('A', ROCK);
+    rps.insert('B', PAPER);
+    rps.insert('C', SCISSORS);
+    rps.insert('X', ROCK);
+    rps.insert('Y', PAPER);
+    rps.insert('Z', SCISSORS);
 
-    let turns = get_lines_as_vec_chars(data);
-    turns.iter().map(|cs| {
-        print!("{:?}", cs);
-        let opp = rps.get(&cs[0]).unwrap();
-        let me = rps.get(&cs[2]).unwrap();
-        score_play(opp, me)
-    }).sum()
+    get_lines_as_vec_chars(data).iter().map(|cs| 
+        score_play(*rps.get(&cs[0]).unwrap(), *rps.get(&cs[2]).unwrap())
+    ).sum()
 }
 
-fn score_play(opp: &Moves, me: &Moves) -> u64 {
-    println!("Opponent: {:?} - Me: {:?}", opp, me);
-    let mut score = HashMap::new();
-    score.insert(Moves::Rock, 1);
-    score.insert(Moves::Paper,  2);
-    score.insert(Moves::Scissors, 3);
-    let result = match opp {
-        Moves::Rock if me == &Moves::Paper => WIN,
-        Moves::Rock if me == &Moves::Scissors => LOSE,
-        Moves::Rock if me == &Moves::Rock => DRAW,
-        Moves::Paper if me == &Moves::Paper => DRAW,
-        Moves::Paper if me == &Moves::Scissors => WIN,
-        Moves::Paper if me == &Moves::Rock => LOSE,
-        Moves::Scissors if me == &Moves::Paper => LOSE,
-        Moves::Scissors if me == &Moves::Scissors => DRAW,
-        Moves::Scissors if me == &Moves::Rock => WIN,
-        &_ => todo!()
-    };
-    result + score.get(me).unwrap()
+fn score_play(opp: u64, me: u64) -> u64 {
+    (match opp {
+        ROCK if me == PAPER=> WIN,
+        ROCK if me == SCISSORS=> LOSE,
+        ROCK if me == ROCK=> DRAW,
+        PAPER if me == PAPER => DRAW,
+        PAPER if me == SCISSORS => WIN,
+        PAPER if me == ROCK => LOSE,
+        SCISSORS if me == PAPER => LOSE,
+        SCISSORS if me == SCISSORS => DRAW,
+        SCISSORS if me == ROCK => WIN,
+        _ => todo!()
+    }) + me
 }
 
 fn part2(data: &String) -> u64 {
     let mut rps = HashMap::new();
-    rps.insert('A', Moves::Rock);
-    rps.insert('B', Moves::Paper);
-    rps.insert('C', Moves::Scissors);
+    rps.insert('A', ROCK);
+    rps.insert('B', PAPER);
+    rps.insert('C', SCISSORS);
     let mut result = HashMap::new();
     result.insert('X', LOSE);
     result.insert('Y', DRAW);
@@ -74,26 +61,25 @@ fn part2(data: &String) -> u64 {
 
     let turns = get_lines_as_vec_chars(data);
     turns.iter().map(|cs| {
-        print!("{:?}", cs);
         let opp = rps.get(&cs[0]).unwrap();
         let result = result.get(&cs[2]).unwrap();
-        let me = get_for_result(opp, *result);
-        score_play(opp, &me)
+        let me = get_for_result(*opp, *result);
+        score_play(*opp, me)
     }).sum()
 }
 
-fn get_for_result(opp: &Moves, result: u64) -> Moves {
+fn get_for_result(opp: u64, result: u64) -> u64 {
     match opp {
-        Moves::Rock if result == WIN => Moves::Paper,
-        Moves::Rock if result == LOSE => Moves::Scissors,
-        Moves::Rock if result == DRAW => Moves::Rock,
-        Moves::Paper if result == WIN => Moves::Scissors,
-        Moves::Paper if result == LOSE => Moves::Rock,
-        Moves::Paper if result == DRAW => Moves::Paper,
-        Moves::Scissors if result == WIN => Moves::Rock,
-        Moves::Scissors if result == LOSE => Moves::Paper,
-        Moves::Scissors if result == DRAW => Moves::Scissors,
-        &_ => todo!()
+        ROCK if result == WIN => PAPER,
+        ROCK if result == LOSE => SCISSORS,
+        ROCK if result == DRAW => ROCK,
+        PAPER if result == WIN => SCISSORS,
+        PAPER if result == LOSE => ROCK,
+        PAPER if result == DRAW => PAPER,
+        SCISSORS if result == WIN => ROCK,
+        SCISSORS if result == LOSE => PAPER,
+        SCISSORS if result == DRAW => SCISSORS,
+        _ => todo!()
     }
 }
 
