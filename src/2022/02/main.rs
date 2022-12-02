@@ -31,23 +31,15 @@ fn part1(data: &String) -> u64 {
 
     get_lines_as_vec_chars(data)
         .iter()
-        .map(|cs| score_play(*rps.get(&cs[0]).unwrap(), *rps.get(&cs[2]).unwrap()))
+        .map(|cs| {
+            (match (*rps.get(&cs[0]).unwrap(), *rps.get(&cs[2]).unwrap()) {
+                (ROCK, PAPER) | (PAPER, SCISSORS) | (SCISSORS, ROCK) => WIN,
+                (ROCK, SCISSORS) | (PAPER, ROCK) | (SCISSORS, PAPER) => LOSE,
+                (ROCK, ROCK) | (PAPER, PAPER) | (SCISSORS, SCISSORS) => DRAW,
+                _ => todo!(),
+            }) + *rps.get(&cs[2]).unwrap()
+        })
         .sum()
-}
-
-fn score_play(opp: u64, me: u64) -> u64 {
-    (match opp {
-        ROCK if me == PAPER => WIN,
-        ROCK if me == SCISSORS => LOSE,
-        ROCK if me == ROCK => DRAW,
-        PAPER if me == PAPER => DRAW,
-        PAPER if me == SCISSORS => WIN,
-        PAPER if me == ROCK => LOSE,
-        SCISSORS if me == PAPER => LOSE,
-        SCISSORS if me == SCISSORS => DRAW,
-        SCISSORS if me == ROCK => WIN,
-        _ => todo!(),
-    }) + me
 }
 
 fn part2(data: &String) -> u64 {
@@ -63,27 +55,14 @@ fn part2(data: &String) -> u64 {
     get_lines_as_vec_chars(data)
         .iter()
         .map(|cs| {
-            let opp = rps.get(&cs[0]).unwrap();
-            let result = rps.get(&cs[2]).unwrap();
-            let me = get_for_result(*opp, *result);
-            score_play(*opp, me)
+            (match (*rps.get(&cs[0]).unwrap(), *rps.get(&cs[2]).unwrap()) {
+                (ROCK, WIN) | (PAPER, DRAW) | (SCISSORS, LOSE) => PAPER,
+                (ROCK, LOSE) | (PAPER, WIN) | (SCISSORS, DRAW) => SCISSORS,
+                (ROCK, DRAW) | (PAPER, LOSE) | (SCISSORS, WIN) => ROCK,
+                _ => todo!(),
+            }) + *rps.get(&cs[2]).unwrap()
         })
         .sum()
-}
-
-fn get_for_result(opp: u64, result: u64) -> u64 {
-    match opp {
-        ROCK if result == WIN => PAPER,
-        ROCK if result == LOSE => SCISSORS,
-        ROCK if result == DRAW => ROCK,
-        PAPER if result == WIN => SCISSORS,
-        PAPER if result == LOSE => ROCK,
-        PAPER if result == DRAW => PAPER,
-        SCISSORS if result == WIN => ROCK,
-        SCISSORS if result == LOSE => PAPER,
-        SCISSORS if result == DRAW => SCISSORS,
-        _ => todo!(),
-    }
 }
 
 #[cfg(test)]
