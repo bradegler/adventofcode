@@ -3,7 +3,6 @@ use std::cmp::Reverse;
 use std::collections::BinaryHeap;
 
 use hashbrown::HashMap;
-use itertools::Itertools;
 
 const YEAR: i32 = 2021;
 const DAY: u32 = 23;
