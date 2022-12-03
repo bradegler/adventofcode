@@ -52,7 +52,7 @@ fn part2(data: &String) -> u64 {
             let val = caps[2].parse::<u64>().unwrap();
             let masked_addr = addr & and_mask | or_mask;
             // Now fan out for every combination of X bits that "float"
-            for i in 0..mask.len() {}
+            for _ in 0..mask.len() {}
             mem.insert(masked_addr, val);
         }
     }

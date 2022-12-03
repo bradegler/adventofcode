@@ -56,7 +56,7 @@ fn part1(data: &String) -> i32 {
     step
 }
 
-fn part2(data: &String) -> i32 {
+fn part2(_data: &String) -> i32 {
     0
 }
 

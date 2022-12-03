@@ -226,7 +226,6 @@ fn calculate_packet(packet: &Packet) -> usize {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use aocshared::get_test_input;
     #[test]
     fn test_hex_to_bin() {
         assert_eq!("0000", hex_to_bin('0'));

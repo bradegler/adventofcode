@@ -51,18 +51,6 @@ impl SnailNumberBag {
     }
 }
 
-fn number_to_string(id: usize, bag: &mut SnailNumberBag) -> String {
-    if bag.get(id).data.is_some() {
-        bag.get(id).data.unwrap().to_string()
-    } else {
-        format!(
-            "[{},{}]",
-            number_to_string(bag.get(id).children[0], bag),
-            number_to_string(bag.get(id).children[1], bag)
-        )
-    }
-}
-
 fn parse(line: &str, bag: &mut SnailNumberBag) -> usize {
     let mut id = bag.new_number();
     let mut stack = vec![];

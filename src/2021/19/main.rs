@@ -14,7 +14,6 @@ fn main() {
 }
 
 struct Scanner {
-    id: usize,
     dist: (i32, i32, i32),
     beacons: Vec<(i32, i32, i32)>,
 }
@@ -23,8 +22,7 @@ fn part1(data: &String) -> usize {
     let mut scanners = data
         .split("\n\n")
         .enumerate()
-        .map(|(i, s)| Scanner {
-            id: i,
+        .map(|(_, s)| Scanner {
             dist: (0, 0, 0),
             beacons: s
                 .lines()
@@ -67,8 +65,7 @@ fn part2(data: &String) -> i32 {
     let mut scanners = data
         .split("\n\n")
         .enumerate()
-        .map(|(i, s)| Scanner {
-            id: i,
+        .map(|(_, s)| Scanner {
             dist: (0, 0, 0),
             beacons: s
                 .lines()
