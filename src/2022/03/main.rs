@@ -21,12 +21,9 @@ fn part1(data: &String) -> i32 {
         })
         .map(|d| {
             d.iter()
-                .map(|a| {
-                    if *a as u32 >= 97 {
-                        *a as i32 - 96
-                    } else {
-                        *a as i32 - 38
-                    }
+                .map(|a| match *a as i32 {
+                    a if a >= 97 => a - 96,
+                    a => a - 38,
                 })
                 .sum::<i32>()
         })
@@ -39,12 +36,9 @@ fn part2(data: &String) -> i32 {
         .map(|chunk| chunk[0].intersect(chunk[1].intersect(chunk[2].clone())))
         .map(|d| {
             d.iter()
-                .map(|a| {
-                    if *a as u32 >= 97 {
-                        *a as i32 - 96
-                    } else {
-                        *a as i32 - 38
-                    }
+                .map(|a| match *a as i32 {
+                    a if a >= 97 => a - 96,
+                    a => a - 38,
                 })
                 .sum::<i32>()
         })
