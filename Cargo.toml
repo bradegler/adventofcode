@@ -10,6 +10,7 @@ aocf = "0.1.18"
 itertools = "0.10"
 num-integer = "0.1.44"
 hashbrown = "0.13.1"
+array_tool = "~1.0.3"
 
 [lib]
 name = "aocshared"
@@ -181,3 +182,7 @@ path = "src/02/2022/main.rs"
 [[bin]]
 name = "aoc2022_02"
 path = "src/2022/02/main.rs"
+
+[[bin]]
+name = "aoc2022_03"
+path = "src/2022/03/main.rs"
