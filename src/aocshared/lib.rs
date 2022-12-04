@@ -50,6 +50,11 @@ pub fn get_lines_as_numbers_u64(lines: &str) -> Vec<u64> {
     lines.lines().map(|s| s.parse::<u64>().unwrap()).collect()
 }
 
+/// Given a line delimited string, parse each line as a i64 and return a Vec
+pub fn get_lines_as_numbers_i64(lines: &str) -> Vec<i64> {
+    lines.lines().map(|s| s.parse::<i64>().unwrap()).collect()
+}
+
 /// Given a line delimited string, convert each line to a string and return a Vec
 pub fn get_lines_as_strs(lines: &str) -> Vec<&str> {
     lines.lines().collect()

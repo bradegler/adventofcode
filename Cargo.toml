@@ -12,6 +12,7 @@ num-integer = "0.1.44"
 hashbrown = "0.13.1"
 array_tool = "1.0.3"
 range-ext = "0.1.3"
+math = "0.10.0"
 
 [lib]
 name = "aocshared"
@@ -191,3 +192,7 @@ path = "src/2022/03/main.rs"
 [[bin]]
 name = "aoc2022_04"
 path = "src/2022/04/main.rs"
+
+[[bin]]
+name = "aoc2019_01"
+path = "src/2019/01/main.rs"
