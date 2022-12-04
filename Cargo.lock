@@ -55,6 +55,7 @@ dependencies = [
  "hashbrown",
  "itertools",
  "num-integer",
+ "range-ext",
  "regex",
 ]
 
@@ -479,6 +480,12 @@ checksum = "d51e9f596de227fda2ea6c84607f5558e196eeaf43c986b724ba4fb8fdf497e7"
 dependencies = [
  "rand_core",
 ]
+
+[[package]]
+name = "range-ext"
+version = "0.1.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "929e16e56d606ca0646a500a118252cbcdb5fd6c635ab718be354cd311012763"
 
 [[package]]
 name = "redox_syscall"
