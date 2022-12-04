@@ -1,5 +1,6 @@
 use aocf::Aoc;
-use std::fs::read_to_string;
+use itertools::Itertools;
+use std::{fs::read_to_string, ops::Range};
 
 /// Gets puzzle input for the provided year and day
 pub fn get_input(year: i32, day: u32) -> String {
@@ -39,12 +40,12 @@ pub fn get_numbers_from_line(line: &str) -> Vec<i32> {
         .collect()
 }
 
-/// Given a line delimited string, parse each line as a u32 and return a Vec 
+/// Given a line delimited string, parse each line as a u32 and return a Vec
 pub fn get_lines_as_numbers(lines: &str) -> Vec<u32> {
     lines.lines().map(|s| s.parse::<u32>().unwrap()).collect()
 }
 
-/// Given a line delimited string, parse each line as a u64 and return a Vec 
+/// Given a line delimited string, parse each line as a u64 and return a Vec
 pub fn get_lines_as_numbers_u64(lines: &str) -> Vec<u64> {
     lines.lines().map(|s| s.parse::<u64>().unwrap()).collect()
 }
@@ -60,13 +61,13 @@ pub fn get_lines_as_strs_rm_empty(lines: &str) -> Vec<&str> {
     lines.lines().filter(|l| !l.is_empty()).collect()
 }
 
-/// Given a line delimited string, convert each line to a Vec of characters 
+/// Given a line delimited string, convert each line to a Vec of characters
 /// and return a Vec of lines
 pub fn get_lines_as_vec_chars(lines: &str) -> Vec<Vec<char>> {
     lines.lines().map(|s| s.chars().collect()).collect()
 }
 
-/// Given a line delimited string, convert each line to a Vec of bytes 
+/// Given a line delimited string, convert each line to a Vec of bytes
 /// and return a Vec of lines
 pub fn get_lines_as_vec_bytes(lines: &str) -> Vec<Vec<u8>> {
     lines.lines().map(|s| s.bytes().collect()).collect()
@@ -76,7 +77,7 @@ pub fn strs_to_u64s(strs: Vec<&str>) -> Vec<u64> {
     strs.iter().map(|s| s.parse::<u64>().unwrap()).collect()
 }
 
-/// Given a line delimited string, convert each line to a Vec of u32 
+/// Given a line delimited string, convert each line to a Vec of u32
 /// Return a Vec of lines where each line is a Vec of u32s
 pub fn get_lines_as_vec_u32(lines: &str) -> Vec<Vec<u32>> {
     lines
@@ -85,7 +86,7 @@ pub fn get_lines_as_vec_u32(lines: &str) -> Vec<Vec<u32>> {
         .collect()
 }
 
-/// Given a line delimited string, convert each line to a Vec of usize 
+/// Given a line delimited string, convert each line to a Vec of usize
 /// Return a Vec of lines where each line is a Vec of usize
 pub fn get_lines_as_vec_usize(lines: &str) -> Vec<Vec<usize>> {
     lines
@@ -151,9 +152,10 @@ where
 }
 
 /// Rotates a grid transposing x,y to y,x
-pub fn transpose<T>(grid: &Vec<Vec<T>>, default: T) -> Vec<Vec<T>> 
-where T: std::clone::Clone, 
-      T: std::marker::Copy
+pub fn transpose<T>(grid: &Vec<Vec<T>>, default: T) -> Vec<Vec<T>>
+where
+    T: std::clone::Clone,
+    T: std::marker::Copy,
 {
     let mut transposed = vec![vec![default; grid.len()]; grid[0].len()];
     for (i, row) in grid.iter().enumerate() {
@@ -194,6 +196,20 @@ pub fn get_adj_points(
         .filter(|(y, x)| *y >= 0 && *x >= 0 && *y < height as i32 && *x < width as i32)
         .map(|(y, x)| (y as usize, x as usize))
         .collect::<Vec<(usize, usize)>>()
+}
+
+/// Converts a string representing a range of type 1-3, 245-300
+/// into a std::ops::Range object of type 1..3, 245..300
+/// If inclusive is set then the resulting range is 1..=3, 245..=300
+pub fn to_range(range: &str, inclusive: bool) -> Range<usize> {
+    let r = range
+        .split("-")
+        .map(|r| r.parse::<usize>().unwrap())
+        .collect_vec();
+    Range {
+        start: r[0],
+        end: r[1] + (inclusive as usize),
+    }
 }
 
 #[cfg(test)]

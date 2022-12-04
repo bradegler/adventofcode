@@ -1,7 +1,6 @@
 use aocshared::*;
 use itertools::Itertools;
 use range_ext::intersect::Intersect;
-use std::ops::Range;
 
 const YEAR: i32 = 2022;
 const DAY: u32 = 04;
@@ -13,39 +12,22 @@ fn main() {
     println!("Part 2: [{}]", part2(&i));
 }
 
-fn to_range(range: &str) -> Range<u64> {
-    let r = range
-        .split("-")
-        .collect_vec()
-        .iter()
-        .map(|r| r.parse::<u64>().unwrap())
-        .collect_vec();
-    Range {
-        start: r[0],
-        end: r[1] + 1,
-    }
-}
-
 fn part1(data: &String) -> u64 {
     get_lines_as_strs(data)
         .iter()
-        .map(|line| line.split(",").collect_vec())
-        .map(|rngs| (to_range(rngs[0]), to_range(rngs[1])))
-        .map(|(r1, r2)| {
-            let inter = r1.intersect(&r2);
-            inter.is_over() || inter.is_within()
+        .map(|line| line.split(",").map(|r| to_range(r, true)).collect_vec())
+        .map(|rngs| {
+            let inter = rngs[0].intersect(&rngs[1]);
+            (inter.is_over() || inter.is_within()) as u64
         })
-        .map(|b| b as u64)
         .sum()
 }
 
 fn part2(data: &String) -> u64 {
     get_lines_as_strs(data)
         .iter()
-        .map(|line| line.split(",").collect_vec())
-        .map(|rngs| (to_range(rngs[0]), to_range(rngs[1])))
-        .map(|(r1, r2)| r1.intersect(&r2).is_any())
-        .map(|b| b as u64)
+        .map(|line| line.split(",").map(|r| to_range(r, true)).collect_vec())
+        .map(|rngs| rngs[0].intersect(&rngs[1]).is_any() as u64)
         .sum()
 }
 
