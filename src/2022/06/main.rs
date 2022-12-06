@@ -1,7 +1,5 @@
 use aocshared::*;
 use array_tool::vec::Uniq;
-use hashbrown::HashSet;
-use itertools::Itertools;
 
 const YEAR: i32 = 2022;
 const DAY: u32 = 06;
