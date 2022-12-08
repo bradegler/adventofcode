@@ -178,10 +178,6 @@ name = "aoc2022_01"
 path = "src/2022/01/main.rs"
 
 [[bin]]
-name = "aoc02_2022"
-path = "src/02/2022/main.rs"
-
-[[bin]]
 name = "aoc2022_02"
 path = "src/2022/02/main.rs"
 
@@ -208,3 +204,7 @@ path = "src/2022/05/main.rs"
 [[bin]]
 name = "aoc2022_06"
 path = "src/2022/06/main.rs"
+
+[[bin]]
+name = "aoc2022_07"
+path = "src/2022/07/main.rs"
