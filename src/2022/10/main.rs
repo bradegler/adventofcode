@@ -48,9 +48,9 @@ fn part1(data: &String) -> i32 {
     result
 }
 
-fn process_cycle(x_reg: i32, position: i32) -> i32 {
-    let row = position / 40;
-    let pixel = if vec![x_reg - 1, x_reg, x_reg + 1].contains(&(position - (40 * row))) {
+fn cycle(x_reg: i32, position: i32) -> i32 {
+    let pixel = if vec![x_reg - 1, x_reg, x_reg + 1].contains(&(position - (40 * (position / 40))))
+    {
         LIGHT
     } else {
         DARK
@@ -65,13 +65,12 @@ fn part2(data: &String) -> u64 {
     let instrs = get_lines_as_strs(data);
     let mut x_reg: i32 = 1;
     let mut position: i32 = 0;
-
     for inst in instrs {
         if inst == CMD_NOOP {
-            position = process_cycle(x_reg, position);
+            position = cycle(x_reg, position);
         } else {
-            position = process_cycle(x_reg, position);
-            position = process_cycle(x_reg, position);
+            position = cycle(x_reg, position);
+            position = cycle(x_reg, position);
             x_reg += inst
                 .split(" ")
                 .last()
@@ -80,7 +79,7 @@ fn part2(data: &String) -> u64 {
         }
     }
 
-    1
+    0
 }
 
 #[cfg(test)]
