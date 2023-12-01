@@ -21,6 +21,15 @@ pub fn get_test_input(year: i32, day: u32) -> String {
         panic!("No input found {}", &file);
     }
 }
+/// Gets test input from the sample file
+pub fn get_test_input_part(year: i32, day: u32, part: u32) -> String {
+    let file = format!("testdata/{}/{}_{:0>2}_p{}.txt", year, year, day, part);
+    if let Ok(i) = read_to_string(&file) {
+        i
+    } else {
+        panic!("No input found {}", &file);
+    }
+}
 
 /// Gets real input from a local file
 pub fn get_real_input(year: i32, day: u32) -> String {
