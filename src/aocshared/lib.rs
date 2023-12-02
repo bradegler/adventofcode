@@ -109,6 +109,12 @@ pub fn get_lines_as_grid_u32(lines: &str) -> Vec<Vec<u32>> {
         .collect()
 }
 
+/// Given a line delimited string, convert each line to a Vec of char
+/// Return a Vec of lines where each line is a Vec of char
+pub fn get_lines_as_grid_char(lines: &str) -> Vec<Vec<char>> {
+    lines.lines().map(|s| s.chars().collect()).collect()
+}
+
 /// Given a line delimited string, convert each line to a Vec of usize
 /// Return a Vec of lines where each line is a Vec of usize
 pub fn get_lines_as_vec_usize(lines: &str) -> Vec<Vec<usize>> {

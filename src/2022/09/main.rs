@@ -29,7 +29,7 @@ fn part1(data: &String) -> usize {
     visited.insert(tail);
     for m in moves {
         let cnt = m.1;
-        for step in 1..cnt + 1 {
+        for _step in 1..cnt + 1 {
             match m.0 {
                 'R' => head.0 += 1,
                 'L' => head.0 -= 1,
@@ -71,7 +71,7 @@ fn part2(data: &String) -> usize {
     visited.insert((0, 0));
     for m in moves {
         let cnt = m.1;
-        for step in 1..cnt + 1 {
+        for _step in 1..cnt + 1 {
             match m.0 {
                 'R' => knots[0].0 += 1,
                 'L' => knots[0].0 -= 1,
