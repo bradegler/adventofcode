@@ -45,13 +45,14 @@ fn part1(data: &String) -> u64 {
             let point_value = grid[point.0][point.1];
             let new_dist = current_dist + 1;
             // can visit node
-            if point_value + 1 <= current_value {
+            if point_value <= current_value + 1 {
                 let point_dist = distances[point.0][point.1];
                 if point_dist > new_dist {
                     distances[point.0][point.1] = new_dist;
                     parents[point.0][point.1] = current;
                 }
             }
+            // find next current as the point with the shortest distance
         }
         break;
     }
