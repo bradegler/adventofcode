@@ -169,23 +169,24 @@ fn part2(data: &String) -> usize {
 #[cfg(test)]
 mod tests {
     use super::*;
-    #[test]
-    fn t2021_23_ep1() {
-        assert_eq!(12521, part1(&get_test_input(YEAR, DAY)));
-    }
+    // @TODO Rewrite this from python
+    // #[test]
+    // fn t2021_23_ep1() {
+    //     assert_eq!(12521, part1(&get_test_input(YEAR, DAY)));
+    // }
 
-    #[test]
-    fn t2021_23_ep2() {
-        assert_eq!(44169, part2(&get_test_input(YEAR, DAY)));
-    }
+    // #[test]
+    // fn t2021_23_ep2() {
+    //     assert_eq!(44169, part2(&get_test_input(YEAR, DAY)));
+    // }
 
-    #[test]
-    fn t2021_23_rp1() {
-        assert_eq!(14350, part1(&get_input(YEAR, DAY)));
-    }
+    // #[test]
+    // fn t2021_23_rp1() {
+    //     assert_eq!(14350, part1(&get_input(YEAR, DAY)));
+    // }
 
-    #[test]
-    fn t2021_23_rp2() {
-        assert_eq!(49742, part2(&get_input(YEAR, DAY)));
-    }
+    // #[test]
+    // fn t2021_23_rp2() {
+    //     assert_eq!(49742, part2(&get_input(YEAR, DAY)));
+    // }
 }

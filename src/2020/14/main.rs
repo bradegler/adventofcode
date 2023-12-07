@@ -56,7 +56,9 @@ fn part2(data: &String) -> u64 {
             mem.insert(masked_addr, val);
         }
     }
-    mem.values().sum()
+    let s: u64 = mem.values().sum();
+    // @TODO finish
+    0
 }
 
 #[cfg(test)]

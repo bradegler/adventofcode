@@ -1,6 +1,6 @@
 use aocshared::aoc::aoc::*;
 use itertools::Itertools;
-use range_ext::intersect::Intersect;
+use range_ext::intersect::{Intersect, IntersectionExt};
 
 const YEAR: i32 = 2022;
 const DAY: u32 = 04;
@@ -17,8 +17,8 @@ fn part1(data: &String) -> u64 {
         .iter()
         .map(|line| line.split(",").map(|r| to_range(r, true)).collect_vec())
         .map(|rngs| {
-            let inter = rngs[0].intersect(&rngs[1]);
-            (inter.is_over() || inter.is_within()) as u64
+            let inter = rngs[0].intersect_ext(&rngs[1]);
+            (inter == IntersectionExt::Over || inter.is_within()) as u64
         })
         .sum()
 }
