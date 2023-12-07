@@ -1,7 +1,6 @@
 use std::cmp::Ordering;
 
 use aocshared::aoc::aoc::*;
-use hashbrown::HashMap;
 use itertools::Itertools;
 
 const YEAR: i32 = 2023;
@@ -14,22 +13,44 @@ fn main() {
     println!("Part 2: [{}]", part2(&i));
 }
 
+fn card_ranks(c: char, jokers: bool) -> usize {
+    match c {
+        'A' => 14,
+        'K' => 13,
+        'Q' => 12,
+        'J' => {
+            if jokers {
+                0
+            } else {
+                11
+            }
+        }
+        'T' => 10,
+        '9' => 9,
+        '8' => 8,
+        '7' => 7,
+        '6' => 6,
+        '5' => 5,
+        '4' => 4,
+        '3' => 3,
+        '2' => 2,
+        _ => unreachable!(),
+    }
+}
+
 fn part1(data: &String) -> u64 {
-    let card_ranks = [
-        '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A',
-    ];
     let lines = get_lines_as_strs_rm_empty(data);
     let hands = lines.iter().map(Hand::parse);
-    let sorted = hands
+    let rank = Hand::rank;
+    let jokers = false;
+    hands
         .sorted_by(|h1, h2| {
-            let r1 = h1.rank();
-            let r2 = h2.rank();
+            let r1 = rank(h1);
+            let r2 = rank(h2);
             if r1 == r2 {
                 for cidx in 0..5 {
-                    let c1 = h1.cards.chars().nth(cidx).unwrap();
-                    let c2 = h2.cards.chars().nth(cidx).unwrap();
-                    let l1 = card_ranks.iter().position(|c| *c == c1).unwrap();
-                    let l2 = card_ranks.iter().position(|c| *c == c2).unwrap();
+                    let l1 = card_ranks(h1.cards.chars().nth(cidx).unwrap(), jokers);
+                    let l2 = card_ranks(h2.cards.chars().nth(cidx).unwrap(), jokers);
                     if l1 > l2 {
                         return Ordering::Greater;
                     } else if l1 < l2 {
@@ -41,30 +62,24 @@ fn part1(data: &String) -> u64 {
                 return r1.cmp(&r2);
             }
         })
-        .collect_vec();
-    sorted
-        .iter()
         .enumerate()
         .map(|(i, h)| (i + 1) as u64 * h.bid)
         .sum()
 }
 
 fn part2(data: &String) -> u64 {
-    let card_ranks = [
-        'J', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'Q', 'K', 'A',
-    ];
     let lines = get_lines_as_strs_rm_empty(data);
     let hands = lines.iter().map(Hand::parse);
-    let sorted = hands
+    let rank = Hand::rank_with_jokers;
+    let jokers = true;
+    hands
         .sorted_by(|h1, h2| {
-            let r1 = h1.rank_with_jokers();
-            let r2 = h2.rank_with_jokers();
+            let r1 = rank(h1);
+            let r2 = rank(h2);
             if r1 == r2 {
                 for cidx in 0..5 {
-                    let c1 = h1.cards.chars().nth(cidx).unwrap();
-                    let c2 = h2.cards.chars().nth(cidx).unwrap();
-                    let l1 = card_ranks.iter().position(|c| *c == c1).unwrap();
-                    let l2 = card_ranks.iter().position(|c| *c == c2).unwrap();
+                    let l1 = card_ranks(h1.cards.chars().nth(cidx).unwrap(), jokers);
+                    let l2 = card_ranks(h2.cards.chars().nth(cidx).unwrap(), jokers);
                     if l1 > l2 {
                         return Ordering::Greater;
                     } else if l1 < l2 {
@@ -76,12 +91,6 @@ fn part2(data: &String) -> u64 {
                 return r1.cmp(&r2);
             }
         })
-        .collect_vec();
-    sorted
-        .iter()
-        .for_each(|h| println!("{:?}: {}", h.cards, h.rank_with_jokers()));
-    sorted
-        .iter()
         .enumerate()
         .map(|(i, h)| (i + 1) as u64 * h.bid)
         .sum()
