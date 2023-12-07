@@ -1,4 +1,4 @@
-use aocshared::*;
+use aocshared::aoc::aoc::*;
 use itertools::Itertools;
 use std::collections::HashSet;
 
@@ -92,7 +92,6 @@ fn run(input: &[Vec<u8>]) -> usize {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use aocshared::get_test_input;
     #[test]
     fn t2021_09_ep1() {
         assert_eq!(15, part1(&get_test_input(YEAR, DAY)));

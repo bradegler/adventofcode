@@ -1,4 +1,4 @@
-use aocshared::*;
+use aocshared::aoc::aoc::*;
 use itertools::Itertools;
 use std::collections::VecDeque;
 
@@ -146,7 +146,6 @@ impl Image {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use aocshared::get_test_input;
     #[test]
     fn t2021_20_ep1() {
         assert_eq!(35, part1(&get_test_input(YEAR, DAY)));

@@ -1,4 +1,4 @@
-use aocshared::*;
+use aocshared::aoc::aoc::*;
 
 const YEAR: i32 = 2020;
 const DAY: u32 = 12;
@@ -119,7 +119,6 @@ fn rotate(direction: &str, angle: i32, (x, y): (i32, i32)) -> (i32, i32) {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use aocshared::get_test_input;
     #[test]
     fn t2020_12_ep1() {
         assert_eq!(25, part1(&get_test_input(YEAR, DAY)));

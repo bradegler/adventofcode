@@ -1,6 +1,5 @@
-use aocshared::*;
+use aocshared::aoc::aoc::*;
 use itertools::Itertools;
-use regex::Regex;
 
 const YEAR: i32 = 2023;
 const DAY: u32 = 06;
@@ -41,31 +40,6 @@ fn part2(data: &String) -> u64 {
         .len() as u64
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use aocshared::get_test_input;
-    #[test]
-    fn t2023_06_ep1() {
-        assert_eq!(288, part1(&get_test_input(YEAR, DAY)));
-    }
-
-    #[test]
-    fn t2023_06_ep2() {
-        assert_eq!(71503, part2(&get_test_input(YEAR, DAY)));
-    }
-
-    #[test]
-    fn t2023_06_rp1() {
-        assert_eq!(1731600, part1(&get_input(YEAR, DAY)));
-    }
-
-    #[test]
-    fn t2023_06_rp2() {
-        assert_eq!(40087680, part2(&get_input(YEAR, DAY)));
-    }
-}
-
 struct Race {
     time: u64,
     distance: u64,
@@ -87,5 +61,29 @@ impl Race {
             })
             .flatten()
             .collect_vec()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn t2023_06_ep1() {
+        assert_eq!(288, part1(&get_test_input(YEAR, DAY)));
+    }
+
+    #[test]
+    fn t2023_06_ep2() {
+        assert_eq!(71503, part2(&get_test_input(YEAR, DAY)));
+    }
+
+    #[test]
+    fn t2023_06_rp1() {
+        assert_eq!(1731600, part1(&get_input(YEAR, DAY)));
+    }
+
+    #[test]
+    fn t2023_06_rp2() {
+        assert_eq!(40087680, part2(&get_input(YEAR, DAY)));
     }
 }

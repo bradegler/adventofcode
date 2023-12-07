@@ -1,4 +1,4 @@
-use aocshared::*;
+use aocshared::aoc::aoc::*;
 use num_integer::lcm;
 
 const YEAR: i32 = 2020;
@@ -55,7 +55,6 @@ fn part2(data: &String) -> i64 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use aocshared::get_test_input;
     #[test]
     fn t2020_13_ep1() {
         assert_eq!(295, part1(&get_test_input(YEAR, DAY)));

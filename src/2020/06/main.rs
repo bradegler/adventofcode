@@ -1,4 +1,4 @@
-use aocshared::get_input;
+use aocshared::aoc::aoc::*;
 use std::collections::HashSet;
 
 const YEAR: i32 = 2020;
@@ -43,7 +43,6 @@ fn part2(data: &String) -> usize {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use aocshared::get_test_input;
     #[test]
     fn t2020_06_ep1() {
         assert_eq!(11, part1(&get_test_input(YEAR, DAY)));

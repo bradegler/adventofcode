@@ -1,6 +1,4 @@
-
-
-use aocshared::*;
+use aocshared::aoc::aoc::*;
 
 const YEAR: i32 = 2022;
 const DAY: u32 = 08;
@@ -98,7 +96,6 @@ fn score(row: usize, col: usize, grid: &Vec<Vec<u32>>) -> usize {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use aocshared::get_test_input;
     #[test]
     fn t2022_08_ep1() {
         assert_eq!(21, part1(&get_test_input(YEAR, DAY)));

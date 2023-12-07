@@ -1,5 +1,6 @@
 #![feature(extract_if)]
-use aocshared::*;
+
+use aocshared::aoc::aoc::*;
 
 const YEAR: i32 = 2021;
 const DAY: u32 = 4;
@@ -139,7 +140,6 @@ fn part2(data: &String) -> u32 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use aocshared::get_test_input;
     #[test]
     fn t2021_04_ep1() {
         assert_eq!(4512, part1(&get_test_input(YEAR, DAY)));

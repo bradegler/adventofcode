@@ -1,4 +1,4 @@
-use aocshared::*;
+use aocshared::aoc::aoc::*;
 
 const YEAR: i32 = 2021;
 const DAY: u32 = 16;

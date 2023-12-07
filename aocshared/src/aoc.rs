@@ -21,6 +21,15 @@ pub mod aoc {
             panic!("No input found {}", &file);
         }
     }
+    /// Gets test input from the sample file
+    pub fn get_test_input_part(year: i32, day: u32, part: u32) -> String {
+        let file = format!("testdata/{}/{}_{:0>2}_p{}.txt", year, year, day, part);
+        if let Ok(i) = read_to_string(&file) {
+            i
+        } else {
+            panic!("No input found {}", &file);
+        }
+    }
 
     /// Gets real input from a local file
     pub fn get_real_input(year: i32, day: u32) -> String {
@@ -72,6 +81,15 @@ pub mod aoc {
         lines.lines().map(|s| s.chars().collect()).collect()
     }
 
+    /// Given a line delimited string, convert each line to a Vec of u32
+    /// and return a Vec of lines
+    pub fn get_lines_as_vec_u32(lines: &str) -> Vec<Vec<u32>> {
+        lines
+            .lines()
+            .map(|s| s.chars().map(|c| c.to_digit(10).unwrap()).collect())
+            .collect_vec()
+    }
+
     /// Given a line delimited string, convert each line to a Vec of bytes
     /// and return a Vec of lines
     pub fn get_lines_as_vec_bytes(lines: &str) -> Vec<Vec<u8>> {
@@ -84,11 +102,17 @@ pub mod aoc {
 
     /// Given a line delimited string, convert each line to a Vec of u32
     /// Return a Vec of lines where each line is a Vec of u32s
-    pub fn get_lines_as_vec_u32(lines: &str) -> Vec<Vec<u32>> {
+    pub fn get_lines_as_grid_u32(lines: &str) -> Vec<Vec<u32>> {
         lines
             .lines()
             .map(|s| s.chars().map(|c| c.to_digit(10).unwrap()).collect())
             .collect()
+    }
+
+    /// Given a line delimited string, convert each line to a Vec of char
+    /// Return a Vec of lines where each line is a Vec of char
+    pub fn get_lines_as_grid_char(lines: &str) -> Vec<Vec<char>> {
+        lines.lines().map(|s| s.chars().collect()).collect()
     }
 
     /// Given a line delimited string, convert each line to a Vec of usize

@@ -1,4 +1,4 @@
-use aocshared::*;
+use aocshared::aoc::aoc::*;
 use std::collections::HashSet;
 
 use itertools::Itertools;
@@ -175,7 +175,6 @@ fn merge(total_scan: &mut HashSet<(i32, i32, i32)>, scanner: &mut Scanner) -> bo
 #[cfg(test)]
 mod tests {
     use super::*;
-    use aocshared::get_test_input;
     #[test]
     fn t2021_19_ep1() {
         assert_eq!(79, part1(&get_test_input(YEAR, DAY)));

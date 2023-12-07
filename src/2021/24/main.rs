@@ -1,4 +1,4 @@
-use aocshared::*;
+use aocshared::aoc::aoc::*;
 use hashbrown::HashMap;
 
 const YEAR: i32 = 2021;

@@ -1,4 +1,4 @@
-use aocshared::*;
+use aocshared::aoc::aoc::*;
 use hashbrown::HashMap;
 
 const YEAR: i32 = 2022;
@@ -68,7 +68,6 @@ fn part2(data: &String) -> u64 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use aocshared::get_test_input;
     #[test]
     fn t2022_02_ep1() {
         assert_eq!(15, part1(&get_test_input(YEAR, DAY)));

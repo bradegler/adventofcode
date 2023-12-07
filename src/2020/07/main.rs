@@ -1,4 +1,4 @@
-use aocshared::get_input;
+use aocshared::aoc::aoc::*;
 use regex::Regex;
 use std::collections::HashMap;
 
@@ -82,7 +82,6 @@ fn part2(data: &String) -> i32 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use aocshared::get_test_input;
     #[test]
     fn t2020_07_ep1() {
         assert_eq!(4, part1(&get_test_input(YEAR, DAY)));

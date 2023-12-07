@@ -1,4 +1,4 @@
-use aocshared::*;
+use aocshared::aoc::aoc::*;
 use itertools::Itertools;
 
 const YEAR: i32 = 2021;
@@ -95,7 +95,6 @@ fn try_permutation(perm: &[char], (a, b): &(Vec<&str>, Vec<&str>)) -> Option<usi
 #[cfg(test)]
 mod tests {
     use super::*;
-    use aocshared::get_test_input;
     #[test]
     fn t2021_08_ep1() {
         assert_eq!(26, part1(&get_test_input(YEAR, DAY)));

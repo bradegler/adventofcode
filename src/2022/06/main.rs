@@ -1,4 +1,4 @@
-use aocshared::*;
+use aocshared::aoc::aoc::*;
 use array_tool::vec::Uniq;
 
 const YEAR: i32 = 2022;

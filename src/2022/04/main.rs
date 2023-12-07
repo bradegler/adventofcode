@@ -1,4 +1,4 @@
-use aocshared::*;
+use aocshared::aoc::aoc::*;
 use itertools::Itertools;
 use range_ext::intersect::Intersect;
 
@@ -34,7 +34,6 @@ fn part2(data: &String) -> u64 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use aocshared::get_test_input;
     #[test]
     fn t2022_04_ep1() {
         assert_eq!(2, part1(&get_test_input(YEAR, DAY)));

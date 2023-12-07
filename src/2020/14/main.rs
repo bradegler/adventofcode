@@ -1,4 +1,4 @@
-use aocshared::*;
+use aocshared::aoc::aoc::*;
 use hashbrown::HashMap;
 use regex::Regex;
 
@@ -62,7 +62,6 @@ fn part2(data: &String) -> u64 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use aocshared::get_test_input;
     #[test]
     fn t2020_14_ep1() {
         assert_eq!(165, part1(&get_test_input(YEAR, DAY)));

@@ -1,0 +1,8 @@
+[package]
+name = "aocshared"
+version = "0.1.0"
+edition = "2018"
+
+[dependencies]
+aocf = "0.1.21"
+itertools = "0.12"

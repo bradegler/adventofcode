@@ -1,4 +1,4 @@
-use aocshared::*;
+use aocshared::aoc::aoc::*;
 use itertools::Itertools;
 
 const YEAR: i32 = 2022;
@@ -14,21 +14,26 @@ fn main() {
 fn part1(data: &String) -> u64 {
     get_lines_as_strs(data)
         .split(|l| l.trim().len() == 0)
-        .into_iter().map(|elf| elf.iter().map(|s| s.parse::<u64>().unwrap()).sum::<u64>()
-    ).max().unwrap()
+        .into_iter()
+        .map(|elf| elf.iter().map(|s| s.parse::<u64>().unwrap()).sum::<u64>())
+        .max()
+        .unwrap()
 }
 
 fn part2(data: &String) -> u64 {
     get_lines_as_strs(data)
         .split(|l| l.trim().len() == 0)
-        .into_iter().map(|elf| elf.iter().map(|s| s.parse::<u64>().unwrap()).sum::<u64>()
-    ).sorted().rev().take(3).sum()
+        .into_iter()
+        .map(|elf| elf.iter().map(|s| s.parse::<u64>().unwrap()).sum::<u64>())
+        .sorted()
+        .rev()
+        .take(3)
+        .sum()
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use aocshared::get_test_input;
     #[test]
     fn t2022_01_ep1() {
         assert_eq!(24000, part1(&get_test_input(YEAR, DAY)));

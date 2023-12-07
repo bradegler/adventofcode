@@ -1,4 +1,4 @@
-use aocshared::*;
+use aocshared::aoc::aoc::*;
 use itertools::Itertools;
 
 const YEAR: i32 = 2023;
@@ -35,31 +35,6 @@ fn part2(data: &String) -> u64 {
         .map(|seed| input.mapped_value(**seed))
         .min()
         .unwrap()
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use aocshared::get_test_input;
-    #[test]
-    fn t2023_05_ep1() {
-        assert_eq!(35, part1(&get_test_input(YEAR, DAY)));
-    }
-
-    #[test]
-    fn t2023_05_ep2() {
-        assert_eq!(46, part2(&get_test_input(YEAR, DAY)));
-    }
-
-    #[test]
-    fn t2023_05_rp1() {
-        assert_eq!(178159714, part1(&get_input(YEAR, DAY)));
-    }
-
-    #[test]
-    fn t2023_05_rp2() {
-        assert_eq!(100165128, part2(&get_input(YEAR, DAY)));
-    }
 }
 
 trait Seeds {
@@ -234,5 +209,29 @@ impl RangeEntry {
         } else {
             None
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn t2023_05_ep1() {
+        assert_eq!(35, part1(&get_test_input(YEAR, DAY)));
+    }
+
+    #[test]
+    fn t2023_05_ep2() {
+        assert_eq!(46, part2(&get_test_input(YEAR, DAY)));
+    }
+
+    #[test]
+    fn t2023_05_rp1() {
+        assert_eq!(178159714, part1(&get_input(YEAR, DAY)));
+    }
+
+    #[test]
+    fn t2023_05_rp2() {
+        assert_eq!(100165128, part2(&get_input(YEAR, DAY)));
     }
 }
