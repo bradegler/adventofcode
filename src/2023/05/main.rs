@@ -1,4 +1,5 @@
 use aocshared::*;
+use itertools::Itertools;
 
 const YEAR: i32 = 2023;
 const DAY: u32 = 05;
@@ -11,16 +12,24 @@ fn main() {
 }
 
 fn part1(data: &String) -> u64 {
-    solve::<Part1Seeds>(data)
+    let input = Input::<Seeds1>::parse(data);
+
+    input
+        .seeds
+        .seeds()
+        .iter()
+        .map(|seed| input.mapped_value(*seed))
+        .min()
+        .unwrap()
 }
 
 fn part2(data: &String) -> u64 {
-    let input = Input::<Part2Seeds>::parse(data);
+    let input = Input::<Seeds2>::parse(data);
     let important_points = important_points(&input.maps);
     let p = important_points
         .iter()
         .filter(|p| input.seeds.entries.iter().any(|s| s.contains(**p)))
-        .collect::<Vec<_>>();
+        .collect_vec();
 
     p.iter()
         .map(|seed| input.mapped_value(**seed))
@@ -58,11 +67,11 @@ trait Seeds {
     fn seeds(&self) -> Vec<u64>;
 }
 
-struct Part1Seeds {
+struct Seeds1 {
     seeds: Vec<u64>,
 }
 
-impl Seeds for Part1Seeds {
+impl Seeds for Seeds1 {
     fn parse(input: &str) -> Self {
         let seeds = input
             .strip_prefix("seeds: ")
@@ -87,7 +96,7 @@ struct SeedEntry {
 
 impl SeedEntry {
     fn seeds(&self) -> Vec<u64> {
-        (self.seed_start..self.seed_start + self.count).collect::<Vec<_>>()
+        (self.seed_start..self.seed_start + self.count).collect_vec()
     }
 
     fn contains(&self, p: u64) -> bool {
@@ -96,17 +105,17 @@ impl SeedEntry {
 }
 
 #[derive(Debug)]
-struct Part2Seeds {
+struct Seeds2 {
     entries: Vec<SeedEntry>,
 }
 
-impl Seeds for Part2Seeds {
+impl Seeds for Seeds2 {
     fn parse(input: &str) -> Self {
         let seeds = input
             .strip_prefix("seeds: ")
             .unwrap()
             .split_whitespace()
-            .collect::<Vec<_>>();
+            .collect_vec();
 
         let entries = (0..seeds.len())
             .step_by(2)
@@ -116,7 +125,7 @@ impl Seeds for Part2Seeds {
 
                 SeedEntry { seed_start, count }
             })
-            .collect::<Vec<_>>();
+            .collect_vec();
 
         Self { entries }
     }
@@ -129,7 +138,7 @@ impl Seeds for Part2Seeds {
 #[derive(Debug)]
 struct Input<SeedType: Seeds> {
     seeds: SeedType,
-    maps: Vec<Map>,
+    maps: Vec<Range>,
 }
 
 impl<SeedType: Seeds> Input<SeedType> {
@@ -139,80 +148,70 @@ impl<SeedType: Seeds> Input<SeedType> {
         let seeds = sections.next().unwrap();
         let seeds = SeedType::parse(seeds);
 
-        let maps = sections.map(Map::parse).collect::<Vec<_>>();
+        let maps = sections.map(Range::parse).collect_vec();
 
         Self { seeds, maps }
     }
 
-    fn mapped_value(&self, mut seed: u64) -> u64 {
-        for map in &self.maps {
-            let entry: Option<u64> = map.entries.iter().find_map(|e| e.translate_down(seed));
-            seed = entry.unwrap_or(seed);
-        }
-
-        seed
+    fn mapped_value(&self, seed: u64) -> u64 {
+        *&self.maps.iter().fold(seed, |seed, range| {
+            range
+                .entries
+                .iter()
+                .find_map(|e| e.source_dest_map(seed))
+                .unwrap_or(seed)
+        })
     }
 }
 
 #[derive(Debug, Clone)]
-struct Map {
-    entries: Vec<MapEntry>,
+struct Range {
+    entries: Vec<RangeEntry>,
 }
 
-impl Map {
+impl Range {
     fn parse(input: &str) -> Self {
-        let mut lines = input.lines();
-        let _ = lines.next().unwrap();
-
-        let entries = lines.map(MapEntry::parse).collect::<Vec<_>>();
-
-        Self { entries }
+        Self {
+            entries: input.lines().skip(1).map(RangeEntry::parse).collect_vec(),
+        }
     }
 }
 
 #[derive(Debug, Clone)]
-struct MapEntry {
+struct RangeEntry {
     dest_range_start: u64,
     source_range_start: u64,
     range_length: u64,
 }
 
-fn important_points(maps: &[Map]) -> Vec<u64> {
-    let mut maps = maps.to_vec();
-    maps.reverse();
-    let maps = maps;
+fn important_points(range: &[Range]) -> Vec<u64> {
+    let range = range.to_vec();
+    let mut range = range;
+    range.reverse();
+    let range = range;
 
-    let mut points = vec![];
-
-    for m in maps {
+    range.iter().fold(vec![], |points, m| {
         let mut translated_points = points
             .iter()
             .map(|p| {
                 m.entries
                     .iter()
-                    .find_map(|e| e.translate_up(*p))
+                    .find_map(|e| e.dest_source_map(*p))
                     .unwrap_or(*p)
             })
-            .collect::<Vec<_>>();
-        let mut new_points = m
-            .entries
-            .iter()
-            .map(|e| e.source_range_start)
-            .collect::<Vec<_>>();
+            .collect_vec();
+        let mut new_points = m.entries.iter().map(|e| e.source_range_start).collect_vec();
         translated_points.append(&mut new_points);
-
-        points = translated_points;
-    }
-
-    points
+        translated_points
+    })
 }
 
-impl MapEntry {
+impl RangeEntry {
     fn parse(l: &str) -> Self {
         let nums = l
             .split_whitespace()
             .map(|n| n.parse().unwrap())
-            .collect::<Vec<u64>>();
+            .collect_vec();
 
         Self {
             dest_range_start: nums[0],
@@ -221,33 +220,19 @@ impl MapEntry {
         }
     }
 
-    fn translate_down(&self, seed: u64) -> Option<u64> {
+    fn source_dest_map(&self, seed: u64) -> Option<u64> {
         if seed >= self.source_range_start && seed < self.source_range_start + self.range_length {
-            let offset = seed - self.source_range_start;
-            Some(self.dest_range_start + offset)
+            Some(self.dest_range_start + seed - self.source_range_start)
         } else {
             None
         }
     }
 
-    fn translate_up(&self, seed: u64) -> Option<u64> {
+    fn dest_source_map(&self, seed: u64) -> Option<u64> {
         if seed >= self.dest_range_start && seed < self.dest_range_start + self.range_length {
-            let offset = seed - self.dest_range_start;
-            Some(self.source_range_start + offset)
+            Some(self.source_range_start + seed - self.dest_range_start)
         } else {
             None
         }
     }
-}
-
-fn solve<SeedType: Seeds>(sample_input: &str) -> u64 {
-    let input = Input::<SeedType>::parse(sample_input);
-
-    input
-        .seeds
-        .seeds()
-        .iter()
-        .map(|seed| input.mapped_value(*seed))
-        .min()
-        .unwrap()
 }

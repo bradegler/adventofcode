@@ -17,31 +17,33 @@ fn part1(data: &String) -> u64 {
     let lines = get_lines_as_strs(data)
         .into_iter()
         .map(|l| re.replace_all(l, "").replace("  ", " "));
-    let parsed = lines.fold(vec![], |mut acc: Vec<Vec<Vec<u64>>>, line| {
-        let parts = line
-            .split("|")
-            .map(|side| {
-                side.trim()
-                    .split(" ")
-                    .map(|n| n.parse::<u64>().unwrap())
-                    .collect::<Vec<u64>>()
-            })
-            .collect::<Vec<Vec<u64>>>();
-        acc.push(parts);
-        acc
-    });
-    parsed.iter().fold(0, |acc, card| {
-        let win_numbers = card.get(0).unwrap();
-        let card_numbers = card.get(1).unwrap();
-        let cnt = card_numbers
-            .iter()
-            .filter(|c| win_numbers.contains(c))
-            .count();
-        if cnt == 0 {
-            return acc;
-        }
-        acc + u64::pow(2, (cnt - 1) as u32)
-    })
+    lines
+        .fold(vec![], |mut acc: Vec<Vec<Vec<u64>>>, line| {
+            let parts = line
+                .split("|")
+                .map(|side| {
+                    side.trim()
+                        .split(" ")
+                        .map(|n| n.parse::<u64>().unwrap())
+                        .collect::<Vec<u64>>()
+                })
+                .collect::<Vec<Vec<u64>>>();
+            acc.push(parts);
+            acc
+        })
+        .iter()
+        .fold(0, |acc, card| {
+            let win_numbers = card.get(0).unwrap();
+            let card_numbers = card.get(1).unwrap();
+            let cnt = card_numbers
+                .iter()
+                .filter(|c| win_numbers.contains(c))
+                .count();
+            if cnt == 0 {
+                return acc;
+            }
+            acc + u64::pow(2, (cnt - 1) as u32)
+        })
 }
 
 fn part2(data: &String) -> u64 {
@@ -83,8 +85,7 @@ fn part2(data: &String) -> u64 {
             }
         }
     }
-    let total: u32 = counts.values().sum();
-    total as u64
+    counts.values().sum::<u32>() as u64
 }
 
 #[cfg(test)]
