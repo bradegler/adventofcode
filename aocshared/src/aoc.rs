@@ -174,7 +174,7 @@ pub mod aoc {
     {
         for row in grid {
             for v in row {
-                print!("{}", v);
+                print!("{:#5}", v);
             }
             println!();
         }
