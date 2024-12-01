@@ -174,7 +174,7 @@ pub mod aoc {
     {
         for row in grid {
             for v in row {
-                print!("{:#5}", v);
+                print!("{}", v);
             }
             println!();
         }
@@ -328,6 +328,40 @@ pub mod aoc {
             let input = vec![vec![1, 2, 3], vec![4, 5, 6], vec![7, 8, 9]];
             let output = transpose(&input, 0);
             let expected = vec![vec![1, 4, 7], vec![2, 5, 8], vec![3, 6, 9]];
+            assert_eq!(output, expected);
+        }
+        #[test]
+        fn test_transpose_revert() {
+            let input = vec![
+                vec![1, 2, 3],
+                vec![4, 5, 6],
+                vec![7, 8, 9],
+                vec![10, 11, 12],
+            ];
+            let output = transpose(&transpose(&input, 0), 0);
+            assert_eq!(output, input);
+        }
+        #[test]
+        fn test_transpose_modify() {
+            let input = vec![vec![1, 2, 3], vec![4, 5, 6], vec![7, 8, 9]];
+            let mut output = transpose(&input, 0);
+            output.insert(2, vec![10, 11, 12]);
+            let expected = vec![
+                vec![1, 4, 7],
+                vec![2, 5, 8],
+                vec![10, 11, 12],
+                vec![3, 6, 9],
+            ];
+            assert_eq!(output, expected);
+        }
+        #[test]
+        fn test_transpose_modify_reverse() {
+            let input = vec![vec![1, 2, 3], vec![4, 5, 6], vec![7, 8, 9]];
+            let mut t = transpose(&input, 0);
+            t.insert(2, vec![10, 11, 12]);
+            let output = transpose(&t, 0);
+
+            let expected = vec![vec![1, 2, 10, 3], vec![4, 5, 11, 6], vec![7, 8, 12, 9]];
             assert_eq!(output, expected);
         }
     }

@@ -39,6 +39,16 @@ pub mod grid {
             }
         }
 
+        pub fn insert_row(&mut self, index: usize, row: Vec<T>) {
+            self.contents.insert(index, row);
+        }
+
+        pub fn insert_col(&mut self, index: usize, col: Vec<T>) {
+            for (idx, row) in self.contents.iter_mut().enumerate() {
+                row.insert(index, col[idx]);
+            }
+        }
+
         pub fn print(&self) {
             print_grid(&self.contents);
         }
