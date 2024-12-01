@@ -1,5 +1,8 @@
+use std::fmt;
+
 use aocshared::aoc::aoc::*;
 use aocshared::grid::grid::{Grid, Point, Visitable};
+use itertools::Itertools;
 
 const YEAR: i32 = 2023;
 const DAY: u32 = 10;
@@ -12,6 +15,42 @@ const SOUTH_WEST: char = '7';
 const SOUTH_EAST: char = 'F';
 const GROUND: char = '.';
 const START: char = 'S';
+
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+enum Direction {
+    North,
+    South,
+    East,
+    West,
+    NS,
+    EW,
+    NE,
+    NW,
+    SW,
+    SE,
+    Ground,
+    Start,
+}
+
+impl fmt::Display for Direction {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
+
+fn map_tile(tile: char) -> Direction {
+    match tile {
+        NORTH_SOUTH => Direction::NS,
+        EAST_WEST => Direction::EW,
+        NORTH_EAST => Direction::NE,
+        NORTH_WEST => Direction::NW,
+        SOUTH_WEST => Direction::SW,
+        SOUTH_EAST => Direction::SE,
+        GROUND => Direction::Ground,
+        START => Direction::Start,
+        _ => panic!("Unmapped char! {}", tile),
+    }
+}
 
 fn main() {
     let i = get_input(YEAR, DAY);
@@ -134,48 +173,150 @@ fn part1(data: &String) -> u64 {
 }
 
 fn part2(data: &String) -> u64 {
-    let contents = get_lines_as_grid_char(data);
-    let mut grid = Grid::new(contents);
-    let spoint = grid.find(START)[0];
-    let mut search = valid_moves(&grid, spoint);
-    let mut distance = Grid::new(vec![vec![0; grid.width()]; grid.height()]);
-    let mut current_distance = 0;
-    while search.len() > 0 {
-        let mut next = vec![];
-        current_distance += 1;
-        for (y, x) in search.into_iter() {
-            let visited = grid.is_visited((y, x));
-            if !visited {
-                grid.visit((y, x));
-                distance.set((y, x), current_distance);
-                valid_moves(&grid, (y, x))
-                    .iter()
-                    .for_each(|m| next.push(*m));
-            }
-        }
-        search = next.clone();
-    }
-    println!();
-    distance.print();
-    println!();
-    grid.print();
+    let contents = get_lines_as_grid_char(data)
+        .iter()
+        .map(|r| r.into_iter().map(|c| map_tile(*c)).collect_vec())
+        .collect_vec();
+    let grid = Grid::new(contents);
+    let spoint = grid.find(Direction::Start)[0];
+    let start_coord = Coord {
+        y: spoint.0,
+        x: spoint.1,
+    };
+    let start_type = get_start_type(start_coord, &grid);
+    let mut loop_path: Vec<Coord> = vec![start_coord];
+    let (mut next, mut coming_from) = match start_type {
+        Direction::SE => (start_coord.east(), Direction::West),
+        Direction::SW => (start_coord.south(), Direction::North),
+        Direction::NS => (start_coord.north().unwrap(), Direction::South),
+        _ => panic!("Wut?"),
+    };
+    loop_path.push(next);
 
-    let mut ground_map = grid.clone();
-    let ground_points = ground_map.find(GROUND);
-    for (y, x) in ground_points {
-        if y == 0 || y == ground_map.height() - 1 || x == 0 || x == ground_map.width() - 1 {
-            ground_map.set((y, x), 'O');
+    while next != start_coord {
+        let cur = grid.at((next.y, next.x));
+        (next, coming_from) = match (cur, coming_from) {
+            (Direction::NS, Direction::South) => (next.north().unwrap(), Direction::South),
+            (Direction::NS, Direction::North) => (next.south(), Direction::North),
+            (Direction::EW, Direction::West) => (next.east(), Direction::West),
+            (Direction::EW, Direction::East) => (next.west().unwrap(), Direction::East),
+            (Direction::NW, Direction::North) => (next.west().unwrap(), Direction::East),
+            (Direction::NW, Direction::West) => (next.north().unwrap(), Direction::South),
+            (Direction::NE, Direction::East) => (next.north().unwrap(), Direction::South),
+            (Direction::NE, Direction::North) => (next.east(), Direction::West),
+            (Direction::SE, Direction::South) => (next.east(), Direction::West),
+            (Direction::SE, Direction::East) => (next.south(), Direction::North),
+            (Direction::SW, Direction::West) => (next.south(), Direction::North),
+            (Direction::SW, Direction::South) => (next.west().unwrap(), Direction::East),
+            _ => panic!("Impossible"),
+        };
+        loop_path.push(next);
+    }
+    //shoelace formula
+    let mut area: isize = 0;
+    let n = loop_path.len() as isize;
+    for w in loop_path.windows(2) {
+        area += (w[0].y * w[1].x) as isize;
+        area -= (w[0].x * w[1].y) as isize;
+    }
+    let area = isize::abs(area) / 2;
+
+    //find number of tiles inside
+    (area - (n / 2) + 1) as u64
+}
+
+fn get_start_type(start: Coord, grid: &Grid<Direction>) -> Direction {
+    let north_type = start.north().map(|c| grid.at((c.y, c.x)));
+    let south_type = match start.y {
+        y if y < grid.height() - 1 => Some(start.south()),
+        _ => None,
+    }
+    .map(|c| grid.at((c.y, c.x)));
+    let east_type = match start.x {
+        x if x < grid.width() - 1 => Some(start.east()),
+        _ => None,
+    }
+    .map(|c| grid.at((c.y, c.x)));
+    let west_type = start.west().map(|c| grid.at((c.y, c.x)));
+
+    let entry_from_north = if let Some(north_type) = north_type {
+        north_type == Direction::NS || north_type == Direction::SE || north_type == Direction::SW
+    } else {
+        false
+    };
+    let entry_from_south = if let Some(south_type) = south_type {
+        south_type == Direction::NS || south_type == Direction::NE || south_type == Direction::NW
+    } else {
+        false
+    };
+    let entry_from_west = if let Some(west_type) = west_type {
+        west_type == Direction::EW || west_type == Direction::NE || west_type == Direction::SE
+    } else {
+        false
+    };
+    let entry_from_east = if let Some(east_type) = east_type {
+        east_type == Direction::EW || east_type == Direction::NW || east_type == Direction::SW
+    } else {
+        false
+    };
+    let start_type = if entry_from_north && entry_from_south {
+        Direction::NS
+    } else if entry_from_north && entry_from_west {
+        Direction::NW
+    } else if entry_from_north && entry_from_east {
+        Direction::NE
+    } else if entry_from_south && entry_from_west {
+        Direction::SW
+    } else if entry_from_south && entry_from_east {
+        Direction::SE
+    } else if entry_from_west && entry_from_east {
+        Direction::EW
+    } else {
+        panic!("Somethings wrong")
+    };
+    start_type
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+struct Coord {
+    y: usize,
+    x: usize,
+}
+
+impl Coord {
+    fn south(&self) -> Coord {
+        Coord {
+            y: self.y + 1,
+            x: self.x,
         }
     }
-    let ground_points = ground_map.find(GROUND);
-    for (y, x) in ground_points {
-        let adj = ground_map.get_adj_points((y, x), false);
-    }
-    println!();
-    ground_map.print();
-    println!();
 
-    0
+    fn east(&self) -> Coord {
+        Coord {
+            y: self.y,
+            x: self.x + 1,
+        }
+    }
+
+    fn north(&self) -> Option<Coord> {
+        if self.y == 0 {
+            return None;
+        }
+        Some(Coord {
+            y: self.y - 1,
+            x: self.x,
+        })
+    }
+
+    fn west(&self) -> Option<Coord> {
+        if self.x == 0 {
+            return None;
+        }
+        Some(Coord {
+            y: self.y,
+            x: self.x - 1,
+        })
+    }
 }
 
 #[cfg(test)]
@@ -198,6 +339,6 @@ mod tests {
 
     #[test]
     fn t2023_10_rp2() {
-        assert_eq!(0, part2(&get_input(YEAR, DAY)));
+        assert_eq!(579, part2(&get_input(YEAR, DAY)));
     }
 }
