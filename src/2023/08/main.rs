@@ -1,5 +1,5 @@
 use aocshared::aoc::aoc::*;
-use hashbrown::{HashMap, HashSet};
+use hashbrown::HashMap;
 use itertools::Itertools;
 use regex::Regex;
 
