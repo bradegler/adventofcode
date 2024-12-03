@@ -8,9 +8,9 @@ edition = "2021"
 [dependencies]
 regex = "1.7.0"
 aocf = "0.1.21"
-itertools = "0.12"
+itertools = "0.13.0"
 num-integer = "0.1.44"
-hashbrown = "0.14.3"
+hashbrown = "0.15.2"
 array_tool = "1.0.3"
 range-ext = "0.3.0"
 aocshared = { path = "aocshared" }
