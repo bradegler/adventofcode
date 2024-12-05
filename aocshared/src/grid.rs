@@ -53,6 +53,19 @@ pub mod grid {
             print_grid(&self.contents);
         }
 
+        pub fn print_mask_unvisited(&self, mask: T) {
+            for (y, row) in self.contents.iter().enumerate() {
+                for (x, v) in row.iter().enumerate() {
+                    if self.visited[y][x] {
+                        print!("{}", v);
+                    } else {
+                        print!("{}", mask);
+                    }
+                }
+                println!();
+            }
+        }
+
         pub fn at(&self, (y, x): Point<usize>) -> T {
             self.contents[y][x]
         }
@@ -90,7 +103,34 @@ pub mod grid {
         }
 
         pub fn in_bounds(&self, (y, x): Point<i32>) -> bool {
-            y > 0 && y < self.height() as i32 && x > 0 && x < self.width() as i32
+            y >= 0 && y < self.height() as i32 && x >= 0 && x < self.width() as i32
+        }
+
+        pub fn get_next_in_seq(
+            &self,
+            (prev_y, prev_x): Point<usize>,
+            (cur_y, cur_x): Point<usize>,
+        ) -> Option<Point<usize>> {
+            let cy = match (prev_y as i32, cur_y as i32) {
+                (p, c) if p < c => c + 1,
+                (p, c) if p > c => c - 1,
+                (_, c) => c,
+            };
+            let cx = match (prev_x as i32, cur_x as i32) {
+                (p, c) if p < c => c + 1,
+                (p, c) if p > c => c - 1,
+                (_, c) => c,
+            };
+            if cy != cur_y as i32 || cx != cur_x as i32 {
+                let inbounds = self.in_bounds((cy, cx));
+                if inbounds {
+                    Some((cy as usize, cx as usize))
+                } else {
+                    None
+                }
+            } else {
+                None
+            }
         }
 
         /// Given a point, x,y calculate all adjacent points including or excluding
