@@ -2,6 +2,8 @@ use aocshared::{
     aoc::aoc::*,
     grid::grid::{Grid, Visitable},
 };
+use hashbrown::HashSet;
+use itertools::Itertools;
 
 const YEAR: i32 = 2024;
 const DAY: u32 = 06;
@@ -16,71 +18,183 @@ fn main() {
 fn part1(data: &String) -> u64 {
     let contents = get_lines_as_grid_char(data);
     let grid = Grid::new(contents);
-    guard_movement(grid).unwrap()
+    let path = guard_movement(&grid);
+    path.unwrap().iter().count() as u64
 }
 
-fn guard_movement(mut grid: Grid<char>) -> Option<u64> {
-    grid.print();
-    // there should always be only one start
-    let mut prev = grid
+#[derive(Clone, Copy, Eq, PartialEq, Hash)]
+enum Direction {
+    Up,
+    Down,
+    Left,
+    Right,
+}
+
+fn guard_movement(gr: &Grid<char>) -> Option<Vec<(usize, usize)>> {
+    let mut grid = gr.clone();
+    let start = grid
         .into_iter()
         .find(|(_, _, c)| *c == '^')
         .map(|(y, x, _)| (y, x))
         .unwrap();
+    // there should always be only one start
+    let mut prev = start;
     grid.visit((prev.0, prev.1));
     let mut next = Some((prev.0 - 1, prev.1));
-    let mut start_loop = None;
-    while next.is_some() && grid.in_bounds((next.unwrap().0 as i32, next.unwrap().1 as i32)) {
-        if grid.is_visited(next.unwrap()) {
-            if next == start_loop {
-                return None;
-            }
-            if start_loop.is_none() {
-                start_loop = Some(next.unwrap());
-            }
+    while next.is_some() {
+        let mut n = next.unwrap();
+        if !grid.in_bounds((n.0 as i32, n.1 as i32)) {
+            break;
         }
-        // If we hit a loop return a None condition
-        if grid.at(next.unwrap()) == '#' {
-            next = match (prev, next.unwrap()) {
-                // north
-                ((py, px), (ny, nx)) if py > ny && px == nx => Some((py, px + 1)),
-                // east
-                ((py, px), (ny, nx)) if py == ny && px < nx => Some((py + 1, px)),
-                // west
-                ((py, px), (ny, nx)) if py == ny && px > nx => Some((py - 1, px)),
-                // south
-                ((py, px), (ny, nx)) if py < ny && px == nx => Some((py, px - 1)),
+        if grid.at(n) == '#' {
+            n = match (prev, n) {
+                // up -> right
+                ((py, px), (ny, nx)) if py > ny && px == nx => (py, px + 1),
+                // down -> left
+                ((py, px), (ny, nx)) if py < ny && px == nx => (py, px - 1),
+                // left -> up
+                ((py, px), (ny, nx)) if py == ny && px > nx => (py - 1, px),
+                // right -> down
+                ((py, px), (ny, nx)) if py == ny && px < nx => (py + 1, px),
                 _ => panic!("Not moving"),
             };
         }
-        grid.visit(next.unwrap());
-        let new_prev = next.unwrap();
-        next = grid.get_next_in_seq(prev, next.unwrap());
-        prev = new_prev;
+        grid.visit(n);
+        next = grid.get_next_in_seq(prev, n);
+        prev = n;
     }
     Some(
         grid.into_iter()
-            .filter(|(y, x, c)| grid.is_visited((*y, *x)))
-            .count() as u64,
+            .filter(|(y, x, _)| grid.is_visited((*y, *x)))
+            .map(|(y, x, _)| (y, x))
+            .collect_vec(),
     )
 }
 
-fn part2(data: &String) -> u64 {
-    let contents = get_lines_as_grid_char(data);
-    let grid = Grid::new(contents);
-    grid.into_iter()
-        .map(|(y, x, c)| {
-            // can't overwrite start, can't overwrite obstacle
-            if c == '^' || c == '#' {
-                Some(0)
-            } else {
-                let mut g = grid.clone();
-                g.set((y, x), '#');
-                guard_movement(g)
+pub fn part2(data: &String) -> u32 {
+    let mut guard = None;
+    let mut grid = get_lines_as_grid_char(data);
+    for (y, row) in grid.iter().enumerate() {
+        for (x, c) in row.iter().enumerate() {
+            if *c == '^' {
+                guard = Some(Guard {
+                    direction: Direction::Up,
+                    position: Point::new(x as i32, y as i32),
+                });
+                break;
             }
-        })
-        .filter(|n| n.is_none())
-        .count() as u64
+        }
+    }
+    let mut guard = guard.unwrap();
+    grid[guard.position.y as usize][guard.position.x as usize] = '.';
+
+    let mut positions = HashSet::with_capacity(10_000);
+    let mut obstacles = 0u32;
+
+    loop {
+        let next_pt = Point::from(guard.direction);
+        let next = Point::new(guard.position.x + next_pt.x, guard.position.y + next_pt.y);
+
+        if let Some(row) = grid.get(next.y as usize) {
+            if let Some(position) = row.get(next.x as usize) {
+                match position {
+                    '.' => {
+                        if !positions.contains(&next) {
+                            grid[next.y as usize][next.x as usize] = '#';
+
+                            if is_loop(&grid, guard) {
+                                obstacles += 1;
+                            }
+
+                            grid[next.y as usize][next.x as usize] = '.';
+                        }
+
+                        guard.position = next;
+                        positions.insert(next);
+                    }
+                    '#' => guard.direction = turn(guard.direction),
+                    _ => unreachable!(),
+                }
+
+                continue;
+            }
+        }
+
+        break;
+    }
+
+    obstacles
+}
+
+fn turn(direction: Direction) -> Direction {
+    match direction {
+        Direction::Up => Direction::Right,
+        Direction::Right => Direction::Down,
+        Direction::Down => Direction::Left,
+        Direction::Left => Direction::Up,
+    }
+}
+
+fn is_loop(grid: &[Vec<char>], mut guard: Guard) -> bool {
+    let mut turns = HashSet::with_capacity(500);
+
+    loop {
+        let next_pt = Point::from(guard.direction);
+        let next = Point::new(guard.position.x + next_pt.x, guard.position.y + next_pt.y);
+
+        if let Some(row) = grid.get(next.y as usize) {
+            if let Some(position) = row.get(next.x as usize) {
+                match position {
+                    '.' => guard.position = next,
+                    '#' => {
+                        guard.direction = turn(guard.direction);
+
+                        if turns.contains(&guard) {
+                            return true;
+                        }
+
+                        turns.insert(guard);
+                    }
+                    _ => unreachable!(),
+                }
+
+                continue;
+            }
+        }
+
+        break;
+    }
+
+    false
+}
+
+#[derive(Clone, Copy, Eq, PartialEq, Hash)]
+struct Guard {
+    direction: Direction,
+    position: Point,
+}
+
+#[derive(Clone, Copy, Default, Eq, PartialEq, Hash)]
+pub struct Point {
+    pub x: i32,
+    pub y: i32,
+}
+
+impl Point {
+    pub fn new(x: i32, y: i32) -> Self {
+        Self { x, y }
+    }
+}
+
+impl From<Direction> for Point {
+    fn from(value: Direction) -> Self {
+        match value {
+            Direction::Up => Point::new(0, -1),
+            Direction::Down => Point::new(0, 1),
+            Direction::Left => Point::new(-1, 0),
+            Direction::Right => Point::new(1, 0),
+        }
+    }
 }
 
 #[cfg(test)]
@@ -101,8 +215,8 @@ mod tests {
         assert_eq!(5312, part1(&get_input(YEAR, DAY)));
     }
 
-    // #[test]
-    // fn t2024_06_rp2() {
-    //     assert_eq!(0, part2(&get_input(YEAR, DAY)));
-    // }
+    #[test]
+    fn t2024_06_rp2() {
+        assert_eq!(1748, part2(&get_input(YEAR, DAY)));
+    }
 }
