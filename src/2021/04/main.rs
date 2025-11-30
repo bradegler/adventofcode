@@ -1,5 +1,3 @@
-#![feature(extract_if)]
-
 use aocshared::aoc::aoc::*;
 
 const YEAR: i32 = 2021;
@@ -117,7 +115,7 @@ fn part2(data: &String) -> u32 {
     for call in call_order {
         remaining.iter_mut().for_each(|b| b.call(call));
         let r = remaining
-            .extract_if(|b| !b.is_winner())
+            .extract_if(.., |b| !b.is_winner())
             .collect::<Vec<Board>>();
         if r.len() == 0 {
             winner_call = call;
