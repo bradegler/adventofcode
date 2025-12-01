@@ -30,4 +30,4 @@ sed "s/%%YEAR%%/${YEAR}/g" < gen/main_template.rs | sed "s/%%DAY%%/${DAY}/g" > "
 } >> Cargo.toml
 
 
-code "src/${YEAR}/${DAY}/main.rs" "testdata/${YEAR}/${YEAR}_${DAY}.txt"
+agy "src/${YEAR}/${DAY}/main.rs" "testdata/${YEAR}/${YEAR}_${DAY}.txt"
