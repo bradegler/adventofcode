@@ -179,6 +179,7 @@ pub mod grid {
         fn next(&mut self) -> Option<Self::Item> {
             self.current = match self.current {
                 Some((y, x)) => {
+                    #[allow(unused)]
                     let (mut ny, mut nx) = (y, x);
                     if x + 1 == self.grid.width() {
                         ny = y + 1;
