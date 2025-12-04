@@ -32,51 +32,31 @@ fn part1(data: &String) -> u64 {
 
 fn part2(data: &String) -> u64 {
     let mut grid = Grid::new(get_lines_as_grid_char(data));
-    let mut removals: Vec<Point<usize>> = grid
-        .into_iter()
-        .map(|(y, x, c)| {
-            if c == '@' {
-                let can_remove = grid
-                    .get_adj_points((y, x), true)
-                    .into_iter()
-                    .filter(|(ny, nx)| grid.at((*ny, *nx)) == '@')
-                    .count()
-                    < 4;
-                if can_remove {
-                    return Some((y, x));
-                }
-            }
-            None
-        })
-        .filter(|o| o.is_some())
-        .map(|o| o.unwrap())
-        .collect();
-
     let mut removed = 0;
-    while removals.len() > 0 {
-        removed += removals.len();
-        for p in removals.into_iter() {
-            grid.set(p, '.')
-        }
-        removals = grid
+    loop {
+        let removals: Vec<Point<usize>> = grid
             .into_iter()
             .map(|(y, x, c)| {
-                if c == '@' {
-                    let can_remove = grid
+                if c == '@'
+                    && grid
                         .get_adj_points((y, x), true)
                         .into_iter()
                         .filter(|(ny, nx)| grid.at((*ny, *nx)) == '@')
                         .count()
-                        < 4;
-                    if can_remove {
-                        return Some((y, x));
-                    }
+                        < 4
+                {
+                    return Some((y, x));
                 }
                 None
             })
             .filter(|o| o.is_some())
             .map(|o| o.unwrap())
             .collect();
+        if removals.len() == 0 {
+            break;
+        }
+        removed += removals.len();
+        removals.iter().for_each(|p| grid.set(*p, '.'));
     }
     removed as u64
 }
