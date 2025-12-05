@@ -8,9 +8,9 @@ edition = "2021"
 [dependencies]
 regex = "1.7.0"
 aocf = "0.1.21"
-itertools = "0.13.0"
+itertools = "0.14.0"
 num-integer = "0.1.44"
-hashbrown = "0.15.2"
+hashbrown = "0.16.1"
 array_tool = "1.0.3"
 range-ext = "0.3.0"
 aocshared = { path = "aocshared" }
@@ -321,3 +321,7 @@ path = "src/2025/03/main.rs"
 [[bin]]
 name = "aoc2025_04"
 path = "src/2025/04/main.rs"
+
+[[bin]]
+name = "aoc2025_05"
+path = "src/2025/05/main.rs"
