@@ -53,6 +53,12 @@ pub mod grid {
             print_grid(&self.contents);
         }
 
+        pub fn print_row(&self, row: usize) {
+            for v in self.contents[row].iter() {
+                print!("{}", v);
+            }
+        }
+
         pub fn print_mask_unvisited(&self, mask: T) {
             for (y, row) in self.contents.iter().enumerate() {
                 for (x, v) in row.iter().enumerate() {
