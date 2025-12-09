@@ -66,6 +66,9 @@ fn part2(data: &String) -> u64 {
     }
     grid.print_row(0);
     println!();
+
+    let mut beams = vec![];
+    beams.push((0, start));
     0
 }
 
