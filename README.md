@@ -8,7 +8,7 @@ This is a repository containing solutions for the 2020, 2021, 2022, 2023, 2024 a
 To generate a files for a new day, run the following command:
 
 ```shell
-daygen.sh <year> <day>
+cargo run --bin daygen -- <day> <year>
 ```
 
 ## Running the code
