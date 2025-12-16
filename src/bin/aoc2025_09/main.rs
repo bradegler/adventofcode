@@ -1,4 +1,4 @@
-use aocshared::{aoc::aoc::*, grid::grid::Grid};
+use aocshared::aoc::aoc::*;
 use itertools::Itertools;
 
 const YEAR: i32 = 2025;
@@ -23,13 +23,11 @@ fn part1(data: &String) -> u64 {
         })
         .collect();
     let mut max_area = 0;
-    println!("Points: {:?}", points);
     for i in 0..points.len() {
         for j in (i + 1)..points.len() {
             let p1 = points[i];
             let p2 = points[j];
             let area = area(p1, p2);
-            println!("P1: {:?}, P2: {:?}, Area: {}", p1, p2, area);
             if area > max_area {
                 max_area = area;
             }
@@ -57,7 +55,11 @@ fn part2(data: &String) -> u64 {
     let mut edges: Vec<((i64, i64), (i64, i64))> = vec![];
     let mut sizes = vec![];
     for i in 0..points.len() {
-        let v = vec![points[i], points[i - 1]];
+        let v = if i == 0 {
+            vec![points[i], points[points.len() - 1]]
+        } else {
+            vec![points[i], points[i - 1]]
+        };
         let edge = v
             .into_iter()
             .sorted()
@@ -65,9 +67,12 @@ fn part2(data: &String) -> u64 {
             .unwrap();
         edges.push(edge);
         for j in (i + 1)..points.len() {
-            let v = vec![points[i], points[j]];
-            let (c1, c2) = v.iter().sorted().collect_tuple().unwrap();
-            sizes.push(area(*c1, *c2));
+            let (c1, c2) = vec![points[i], points[j]]
+                .into_iter()
+                .sorted()
+                .collect_tuple()
+                .unwrap();
+            sizes.push((area(c1, c2), c1, c2));
         }
     }
     edges.sort_by(|a, b| area(a.0, a.1).cmp(&area(b.0, b.1)));
@@ -76,9 +81,16 @@ fn part2(data: &String) -> u64 {
     edges.reverse();
     sizes.reverse();
 
-    println!("Edges: {:?}", edges);
-    println!("Sizes: {:?}", sizes);
-
+    for (size, (x1, y1), (x2, y2)) in sizes {
+        let (y1, y2) = vec![y1, y2].into_iter().sorted().collect_tuple().unwrap();
+        let found = edges
+            .clone()
+            .into_iter()
+            .any(|((ex1, ey1), (ex2, ey2))| ex2 > x1 && ex1 < x2 && ey2 > y1 && ey1 < y2);
+        if !found {
+            return size;
+        }
+    }
     0
 }
 
@@ -100,8 +112,8 @@ mod tests {
         assert_eq!(4777967538, part1(&get_input(YEAR, DAY)));
     }
 
-    // #[test]
-    // fn t2025_09_rp2() {
-    //     assert_eq!(0, part2(&get_input(YEAR, DAY)));
-    // }
+    #[test]
+    fn t2025_09_rp2() {
+        assert_eq!(1439894345, part2(&get_input(YEAR, DAY)));
+    }
 }
