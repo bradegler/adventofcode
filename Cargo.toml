@@ -16,3 +16,4 @@ range-ext = "0.3.0"
 aocshared = { path = "aocshared" }
 clap = { version = "4.5", features = ["derive"] }
 chrono = "0.4"
+pix-engine = "0.8.0"
